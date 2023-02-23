@@ -12,11 +12,11 @@ router.post(
 [ // middleware
   body('email') // Only Check req.body
     .isEmail() // Sanitization (净化函数)
-    .withMessage('Email must be valid'), // error message
+    .withMessage('邮箱格式错误'), // error message
   body('password')
     .trim()
     .isLength({ min: 4, max: 20 })
-    .withMessage('Password must be between 4 and 20 characters')
+    .withMessage('密码长度在4到20个字符')
 ],
 validateRequest,
 async (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ async (req: Request, res: Response) => {
   const { email, password } = req.body
   const existingUser = await User.findOne({ email })
   if(existingUser) {
-    throw new BadRequestError('Email in use')
+    throw new BadRequestError('邮箱已被使用')
   }
 
   // create new user

@@ -8,6 +8,7 @@ export class OrderCreatedListener extends Listener {
 
   async onMessage(data: any, msg: Message) {
     const delay = new Date(data.expriesAt).getTime() - new Date().getTime()
+    console.log(`订单将在 ${delay} 毫秒后取消`)
     await expirationQueue.add(
       {
         orderId: data.id

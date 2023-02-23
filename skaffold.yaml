@@ -12,14 +12,6 @@ build:
       manual:
         - src: 'src/**/*.ts'
           dest: .
-  - image: wentaozhai/client
-    context: client
-    docker:
-      dockerfile: Dockerfile
-    sync:
-      manual:
-        - src: '**/*.js'
-          dest: .
   - image: wentaozhai/tickets
     context: tickets
     docker:
@@ -49,10 +41,11 @@ manifests:
   - infra/k8s/*.yaml
   # - infra/k8s/auth-depl.yaml
   # - infra/k8s/auth-mongo-depl.yaml
-  # - infra/k8s/client-depl.yaml
   # - infra/k8s/ingress-srv.yaml
   # - infra/k8s/tickets-depl.yaml
   # - infra/k8s/tickets-mongo-depl.yaml
   # - infra/k8s/orders-depl.yaml
   # - infra/k8s/orders-mongo-depl.yaml
+  # - infra/k8s/expiration-depl.yaml
+  # - infra/k8s/expiration-redis-depl.yaml
   # - infra/k8s/nats-depl.yaml

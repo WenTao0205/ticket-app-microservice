@@ -13,10 +13,10 @@ requireAuth,
   body('title')
     .not()
     .isEmpty()
-    .withMessage('Title is required'),
+    .withMessage('标题不能为空'),
   body('price')
     .isFloat({ gt: 0 })
-    .withMessage('Price must be provided and must be greater than 0')
+    .withMessage('价格不能为0')
 ],
 validateRequest,
 async (req: Request, res: Response) => {

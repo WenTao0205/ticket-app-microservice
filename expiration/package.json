@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@zwt-tickets/common": "^1.0.23",
+    "@zwt-tickets/common": "^1.0.27",
     "bull": "^4.10.4",
     "node-nats-streaming": "^0.2.6",
     "ts-node-dev": "^2.0.0",

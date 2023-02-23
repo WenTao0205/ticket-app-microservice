@@ -15,10 +15,21 @@ import { errorHandler, NotFoundError } from '@zwt-tickets/common'
 const app = express()
 app.set('trust proxy', true)
 app.use(json())
+// postman
+// app.use(
+//   cookieSession({
+//     signed: false,
+//     secure: false,
+//     httpOnly: false
+//   })
+// )
+// 浏览器
 app.use(
   cookieSession({
     signed: false,
-    secure: false
+    secure: true,
+    sameSite: 'none',
+    httpOnly: false
   })
 )
 

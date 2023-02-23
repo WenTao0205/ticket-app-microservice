@@ -1,4 +1,5 @@
 import { Listener, Subjects } from "@zwt-tickets/common"
+import mongoose from "mongoose"
 import { Message } from "node-nats-streaming"
 import { Ticket } from "../../models/ticket"
 import { TicketUpdatedPublisher } from "../publisher/ticket-updated-publisher"

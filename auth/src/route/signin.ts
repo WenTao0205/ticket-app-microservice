@@ -14,11 +14,11 @@ router.post('/api/users/signin',
 [
   body('email')
     .isEmail()
-    .withMessage('Email must be valid'),
+    .withMessage('邮箱格式错误'),
   body('password')
     .trim()
     .notEmpty()
-    .withMessage('You must supply a password')
+    .withMessage('需要密码')
 ],
 validateRequest,
 async (req: Request, res: Response) => {
@@ -26,12 +26,12 @@ async (req: Request, res: Response) => {
 
   const existingUser = await User.findOne({ email })
   if(!existingUser) {
-    throw new BadRequestError('Invalid Credentials')
+    throw new BadRequestError('邮箱不存在')
   }
 
   const passwordMatch = await Password.compare(existingUser.password, password)
   if(!passwordMatch) {
-    throw new BadRequestError('Invalid Credentials')
+    throw new BadRequestError('密码错误')
   }
 
   // Generate JWT
