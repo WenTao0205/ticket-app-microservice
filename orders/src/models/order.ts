@@ -1,19 +1,23 @@
 import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
-import { TicketDoc } from './ticket';
+import { ShowDoc } from './show';
 
 interface OrderAttrs {
   userId: string;
+  price: number;
+  seat: Array<number>;
   status: string;
   expiresAt: Date;
-  ticket: TicketDoc;
+  show: ShowDoc;
 }
 
 interface OrderDoc extends mongoose.Document {
   userId: string;
+  price: number;
+  seat: Array<number>;
   status: string;
   expiresAt: Date;
-  ticket: TicketDoc;
+  show: ShowDoc;
   version: number;
 }
 
@@ -25,18 +29,27 @@ const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
-      required: true,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+    seat: {
+      type: Array,
+      required: true
     },
     status: {
       type: String,
       required: true
     },
     expiresAt: {
-      type: mongoose.Schema.Types.Date,
+      type: mongoose.Schema.Types.Date
     },
-    ticket: {
+    show: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ticket',
+      ref: 'Show',
+      required: true
     },
   },
   {

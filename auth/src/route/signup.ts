@@ -16,26 +16,34 @@ router.post(
   body('password')
     .trim()
     .isLength({ min: 4, max: 20 })
-    .withMessage('密码长度在4到20个字符')
+    .withMessage('密码长度在4到20个字符'),
+  body('username')
+    .notEmpty()
+    .withMessage('用户名不能为空')
 ],
 validateRequest,
 async (req: Request, res: Response) => {
-  // check existing user
-  const { email, password } = req.body
+  // check existing user (username?)
+  const { email, password, username } = req.body
   const existingUser = await User.findOne({ email })
-  if(existingUser) {
-    throw new BadRequestError('邮箱已被使用')
-  }
+  if(existingUser) throw new BadRequestError('邮箱已被使用')
 
   // create new user
-  const user = User.build({ email, password })
+  const user = User.build({ email, password, username })
   await user.save()
 
   // Generate JWT
   const userJwt = jwt.sign(
     {
       id: user.id,
-      email: user.email
+      username: user.username,
+      email: user.email,
+      sex: user.sex,
+      birthDate: user.birthDate,
+      personalIntro: user.personalIntro,
+      rate: user.rate,
+      createAt: user.createdAt,
+      updateAt: user.updatedAt
     },
     process.env.JWT_KEY! // "!" tell typescript is ok
   )

@@ -10,21 +10,19 @@ const router = express.Router();
 router.post('/api/tickets', 
 requireAuth,
 [
-  body('title')
-    .not()
-    .isEmpty()
-    .withMessage('标题不能为空'),
   body('price')
     .isFloat({ gt: 0 })
-    .withMessage('价格必须大于0')
+    .withMessage('价格必须大于0'),
+  body(['type', 'site', 'seat', 'cover', 'intro', 'title'])
+    .notEmpty()
+    .withMessage('不能留空！请再次检查'),
 ],
 validateRequest,
 async (req: Request, res: Response) => {
-  const { title, price } = req.body
+  const { title, price, type, site, seat, cover, intro } = req.body
 
   const ticket = Ticket.build({
-    title,
-    price,
+    title, price, type, site, seat, cover, intro,
     userId: req.currentUser!.id
   })
   await ticket.save()
@@ -32,6 +30,9 @@ async (req: Request, res: Response) => {
     id: ticket.id,
     title: ticket.title,
     price: ticket.price,
+    site: ticket.site,
+    seat: ticket.seat,
+    cover: ticket.cover,
     userId: ticket.userId,
     version: ticket.version
   })

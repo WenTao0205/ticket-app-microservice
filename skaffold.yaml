@@ -12,16 +12,40 @@ build:
       manual:
         - src: 'src/**/*.ts'
           dest: .
-  - image: wentaozhai/tickets
-    context: tickets
+  - image: wentaozhai/admin
+    context: admin
     docker:
       dockerfile: Dockerfile
     sync:
       manual:
         - src: 'src/**/*.ts'
           dest: .
+  # - image: wentaozhai/tickets
+  #   context: tickets
+  #   docker:
+  #     dockerfile: Dockerfile
+  #   sync:
+  #     manual:
+  #       - src: 'src/**/*.ts'
+  #         dest: .
   - image: wentaozhai/orders
     context: orders
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - src: 'src/**/*.ts'
+          dest: .
+  - image: wentaozhai/halls
+    context: halls
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - src: 'src/**/*.ts'
+          dest: .
+  - image: wentaozhai/shows
+    context: shows
     docker:
       dockerfile: Dockerfile
     sync:

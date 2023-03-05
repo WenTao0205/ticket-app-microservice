@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '../api/base-axios'
 import { useState } from 'react'
 
 export default ({ url, method, body, onSuccess }) => {

@@ -12,6 +12,11 @@
 // }
 
 // export default LandingPage
+import axios from '../api/base-axios'
+
+const fetchData = async () => {
+  
+}
 
 const LandingPage = () => {
   return <h1>LandingPage</h1>

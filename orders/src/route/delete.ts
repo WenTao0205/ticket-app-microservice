@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express'
 import { NotAuthorizedError, NotFoundError, requireAuth } from '@zwt-tickets/common'
 import { Order } from '../models/order'
+import { Show } from '../models/show'
+import { removeSeat } from '../services/removeSeat'
 import { OrderStatus } from '@zwt-tickets/common'
 import { OrderCancelledPublisher } from '../events/publisher/order-cancelled-publisher'
 import { natsWrapper } from '../nats-wrapper'
@@ -9,24 +11,28 @@ const router = express.Router()
 
 router.delete('/api/orders/:orderId', requireAuth, async (req: Request, res: Response) => {
   const { orderId } = req.params
-  const order = await Order.findById(orderId).populate('ticket')
+  const order = await Order.findById(orderId).populate('show')
   
   // 检查订单是否存在
   if(!order) throw new NotFoundError()
+  
+  const show = await Show.findById(order.show.id)
+  if(!show) throw new NotFoundError()
   if(order.userId !== req.currentUser!.id) throw new NotAuthorizedError()
 
   order.status = OrderStatus.Cancelled
+  removeSeat(order.seat, show.selectedSeat!)
   await order.save()
+  await show.save()
 
   new OrderCancelledPublisher(natsWrapper.client).publish({
     id: order.id,
     version: order.version,
-    ticket: {
-      id: order.ticket.id
-    }
+    seat: order.seat,
+    showId: order.show.id
   })
 
-  res.send(204).send(order)
+  res.status(204).send(order)
 })
 
 export { router as deleteOrderRouter }

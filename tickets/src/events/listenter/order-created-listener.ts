@@ -10,7 +10,7 @@ export class OrderCreatedListener extends Listener {
   async onMessage(data: any, msg: Message) {
     const ticket = await Ticket.findById(data.ticket.id)
 
-    if(!ticket) throw Error('Ticket not found')
+    if(!ticket) throw new Error('Ticket not found')
 
     ticket.set(({ orderId: data.id }))
 
@@ -19,6 +19,9 @@ export class OrderCreatedListener extends Listener {
       id: ticket.id,
       price: ticket.price,
       title: ticket.title,
+      site: ticket.site,
+      seat: ticket.seat,
+      cover: ticket.cover,
       userId: ticket.userId,
       orderId: ticket.orderId,
       version: ticket.version

@@ -8,28 +8,22 @@ import { currentUserRouter } from './route/current-user'
 import { signinRouter } from './route/signin'
 import { signoutRouter } from './route/signout'
 import { signupRouter } from './route/signup'
+import { getAllUsers } from './route/getuser'
+import { alterUserInfo } from './route/alteruserinfo'
 
 // error
 import { errorHandler, NotFoundError } from '@zwt-tickets/common'
 
+
 const app = express()
 app.set('trust proxy', true)
 app.use(json())
-// postman
-// app.use(
-//   cookieSession({
-//     signed: false,
-//     secure: false,
-//     httpOnly: false
-//   })
-// )
-// 浏览器
 app.use(
   cookieSession({
     signed: false,
-    secure: true,
-    sameSite: 'none',
-    httpOnly: false
+    secure: false,
+    httpOnly: false,
+    maxAge: 24 * 60 * 60 * 1000
   })
 )
 
@@ -37,6 +31,8 @@ app.use(currentUserRouter)
 app.use(signinRouter)
 app.use(signoutRouter)
 app.use(signupRouter)
+app.use(getAllUsers)
+app.use(alterUserInfo)
 
 app.all('*', async (req, res) => {
   throw new NotFoundError()

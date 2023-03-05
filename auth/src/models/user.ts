@@ -7,7 +7,12 @@ import { Password } from "../services/password";
 // that are required tp create a new User
 interface UserAttrs {
   email: string
+  username: string
   password: string
+  sex?: string
+  birthDate?: string
+  personalIntro?: string
+  rate?: string
 }
 
 // An interface that describes the properties
@@ -20,7 +25,12 @@ interface UserModel extends Model<UserDoc> {
 // that a User Document has
 interface UserDoc extends Document {
   email: string
+  username: string
   password: string
+  sex?: string
+  birthDate?: string
+  personalIntro?: string
+  rate?: string
   createdAt: string
   updatedAt: string
 }
@@ -33,10 +43,30 @@ const userSchema = new Schema(
     type: String,
     required: true
   },
+  username: {
+    type: String,
+    required: true
+  },
   password: {
     type: String,
     required: true
   },
+  sex: {
+    type: String,
+    default: ''
+  },
+  birthDate: {
+    type: String,
+    default: ''
+  },
+  personalIntro: {
+    type: String,
+    default: ''
+  },
+  rate: {
+    type: String,
+    default: ''
+  }
 }, 
 {
   toJSON: {

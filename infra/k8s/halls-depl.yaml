@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: halls-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: halls
+  template:
+    metadata:
+      labels:
+        app: halls
+    spec:
+      containers:
+        - name: halls
+          image: wentaozhai/halls
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: MONGO_URI
+              value: 'mongodb://halls-mongo-srv:27017/halls'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: halls-srv
+spec:
+  selector:
+    app: halls
+  ports:
+    - name: halls
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

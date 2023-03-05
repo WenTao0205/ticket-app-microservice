@@ -10,10 +10,6 @@ const router = express.Router();
 router.put('/api/tickets/:id',
 requireAuth,
 [
-  body('title')
-    .not()
-    .isEmpty()
-    .withMessage('标题不能为空'),
   body('price')
     .isFloat({ gt: 0 })
     .withMessage('价格不能为0')
@@ -25,16 +21,21 @@ async (req: Request, res: Response) => {
   if(!ticket) throw new NotFoundError()
   if(ticket.userId !== req.currentUser!.id) throw new NotAuthorizedError()
 
+  const { title, price, type, site, seat, cover, intro } = req.body
+  
   ticket.set({
-    title: req.body.title,
-    price: req.body.price
+    title, price, type, site, seat, cover, intro
   })
+
   await ticket.save()
   new TicketUpdatedPublisher(natsWrapper.client).publish({
     id: ticket.id,
     title: ticket.title,
     price: ticket.price,
     userId: ticket.userId,
+    site: ticket.site,
+    seat: ticket.seat,
+    cover: ticket.cover,
     version: ticket.version
   })
 

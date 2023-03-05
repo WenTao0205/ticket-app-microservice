@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: halls-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: halls-mongo
+  template:
+    metadata:
+      labels:
+        app: halls-mongo
+    spec:
+      containers:
+        - name: halls-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: halls-mongo-srv
+spec:
+  selector:
+    app: halls-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017 # defalut mongo port
+      targetPort: 27017

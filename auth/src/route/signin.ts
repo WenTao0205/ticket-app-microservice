@@ -1,12 +1,10 @@
 import express, { Request, Response } from 'express'
-import { body, validationResult } from 'express-validator'
+import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
 
 import { User } from '../models/user'
 import { Password } from '../services/password'
 import { validateRequest, BadRequestError } from '@zwt-tickets/common'
-// import { validateRequest } from '../middlewares/validate-request'
-// import { BadRequestError } from '../errors/bad-request-error'
 
 const router = express.Router()
 
@@ -38,7 +36,14 @@ async (req: Request, res: Response) => {
   const userJwt = jwt.sign(
     {
       id: existingUser.id,
-      email: existingUser.email
+      username: existingUser.username,
+      email: existingUser.email,
+      sex: existingUser.sex,
+      birthDate: existingUser.birthDate,
+      personalIntro: existingUser.personalIntro,
+      rate: existingUser.rate,
+      createAt: existingUser.createdAt,
+      updateAt: existingUser.updatedAt
     },
     process.env.JWT_KEY! // "!" tell typescript is ok
   )

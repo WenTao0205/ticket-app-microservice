@@ -5,6 +5,11 @@ interface TicketAttrs {
   title: string
   price: number
   userId: string
+  type?: string
+  site?: string
+  seat?: string
+  cover?: string
+  intro?: string
 }
 
 interface TicketDoc extends mongoose.Document {
@@ -13,6 +18,12 @@ interface TicketDoc extends mongoose.Document {
   userId: string
   version: number
   orderId?: string
+  status?: string
+  type?: string
+  site?: string
+  seat?: string
+  cover?: string
+  intro?: string
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
@@ -34,6 +45,25 @@ const ticketSchema = new mongoose.Schema(
     required: true
   },
   orderId: {
+    type: String
+  },
+  status: {
+    type: String,
+    default: '审核中'
+  },
+  type: {
+    type: String
+  },
+  site: {
+    type: String
+  },
+  seat: {
+    type: String
+  },
+  cover: {
+    type: String
+  },
+  intro: {
     type: String
   }
 },

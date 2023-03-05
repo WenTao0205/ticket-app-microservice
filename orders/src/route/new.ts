@@ -1,43 +1,41 @@
 import express, { Request, Response } from 'express'
 import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest } from '@zwt-tickets/common'
 import { body } from 'express-validator'
-import { Ticket } from '../models/ticket'
+import { Show } from '../models/show'
 import { Order } from '../models/order'
 import { OrderCreatedPublisher } from '../events/publisher/order-created-publisher'
 import { natsWrapper } from '../nats-wrapper'
 
 const router = express.Router()
 
-const EXPIRATION_WINDOW_SECONDS = 1 * 15
+const EXPIRATION_WINDOW_SECONDS = 1 * 10
 
 router.post('/api/orders',
 requireAuth,
 [
-  body('ticketId')
-    .not()
-    .isEmpty()
-    .withMessage('TicketId must be provided'),
+  body('showId')
+    .notEmpty()
+    .withMessage('ShowId must be provided'),
+  body('seat')
+    .notEmpty()
+    .withMessage('seat must be provided')
+    .isArray()
+    .withMessage('seat must be a array')
 ],
 validateRequest,
 async (req: Request, res: Response) => {
-  const { ticketId } = req.body
+  const { showId, seat, price } = req.body
 
   // 确保下单的票存在
-  const ticket = await Ticket.findById(ticketId)
-  if(!ticket) throw new NotFoundError()
+  const show = await Show.findById(showId)
+  if(!show) throw new NotFoundError()
 
-  // 确保票没有被下单
-  const existingOrder = await Order.findOne({
-    ticket: ticket,
-    status: {
-      $in: [
-        OrderStatus.Created,
-        OrderStatus.AwaitingPayment,
-        OrderStatus.Complete
-      ]
-    }
-  })
-  if(existingOrder) throw new BadRequestError('该张票被已下单')
+  // 确保座位没有被选
+  for(let i of seat) {
+    if(show.selectedSeat?.includes(i)) throw new Error('座位已被预订')
+  }
+  for(let i of seat) show.selectedSeat?.push(i)
+  await show.save()
 
   // 计算订单过期时间
   const expiration = new Date()
@@ -48,7 +46,9 @@ async (req: Request, res: Response) => {
     userId: req.currentUser!.id,
     status: OrderStatus.Created,
     expiresAt: expiration,
-    ticket
+    price,
+    seat,
+    show
   })
   await order.save()
 
@@ -60,12 +60,10 @@ async (req: Request, res: Response) => {
     id: order.id,
     status: order.status,
     userId: order.userId,
+    seat: order.seat,
     expriesAt: order.expiresAt.toISOString(),
     version: order.version,
-    ticket: {
-      id: ticket.id,
-      price: ticket.price
-    }
+    showId: order.show.id
   })
 
   res.status(201).send(order)

@@ -5,16 +5,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: 'true'
-    # nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-cors: 'true' # enable-cors
-    # nginx.ingress.kubernetes.io/cors-allow-methods: 'GET, PUT, POST, DELETE, PATCH, OPTIONS'
-    nginx.ingress.kubernetes.io/cors-allow-origin: 'http://localhost:3000'
-    # nginx.ingress.kubernetes.io/cors-allow-credentials: 'true'
-    # nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization'
-    # nginx.ingress.kubernetes.io/affinity: 'cookie'
-    # nginx.ingress.kubernetes.io/session-cookie-name: "session"
-    # nginx.ingress.kubernetes.io/session-cookie-samesite: 'None'
-    # nginx.ingress.kubernetes.io/session-cookie-conditional-samesite-none: 'true'
+    nginx.ingress.kubernetes.io/cors-allow-origin: 'http://localhost:8091'
 spec:
   rules:
     - host: ticketing.dev
@@ -28,10 +20,31 @@ spec:
                 port:
                   number: 3000
           - pathType: Prefix
-            path: /api/tickets/?(.*)
+            path: /api/admin/?(.*)
             backend: 
               service: 
-                name: tickets-srv
+                name: admin-srv
+                port:
+                  number: 3000
+          # - pathType: Prefix
+          #   path: /api/tickets/?(.*)
+          #   backend: 
+          #     service: 
+          #       name: tickets-srv
+          #       port:
+          #         number: 3000
+          - pathType: Prefix
+            path: /api/hall/?(.*)
+            backend: 
+              service: 
+                name: halls-srv
+                port:
+                  number: 3000
+          - pathType: Prefix
+            path: /api/show/?(.*)
+            backend: 
+              service: 
+                name: shows-srv
                 port:
                   number: 3000
           - pathType: Prefix
