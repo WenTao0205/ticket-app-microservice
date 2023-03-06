@@ -7,13 +7,10 @@ export function getOrderList() {
   })
 }
 
-export function getOrderDetail(id) {
+export function getOrderDetail(orderId) {
   return axios({
-    url: '/orders',
-    method: 'get',
-    params: {
-      id
-    }
+    url: `/orders/${orderId}`,
+    method: 'get'
   })
 }
 
@@ -27,20 +24,14 @@ export function createOrder(data) {
 
 export function cancelOrder(orderId) {
   return axios({
-    url: '/orders',
-    method: 'delete',
-    params: {
-      orderId
-    }
+    url: `/orders/${orderId}`,
+    method: 'delete'
   })
 }
 
 export function completeOrder(orderId) {
   return axios({
-    url: '/orders',
-    method: 'put',
-    params: {
-      orderId
-    }
+    url: `/orders/${orderId}`,
+    method: 'put'
   })
 }

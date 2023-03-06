@@ -4,6 +4,33 @@
       <el-step title="步骤1" description="选择座位号"></el-step>
       <el-step title="步骤2" description="结算付款"></el-step>
     </el-steps>
+    <!-- 订单状态 -->
+    <!-- 未支付，未取消，15分钟内 -->
+    <div class="bill-info-status" v-if="order.status === 'created'">
+      <div class="pay-icon">
+        <img src="../assets/img/money.png">
+      </div>
+      <div class="pay-info">
+        <div class="pay-info-status">待支付</div>
+        <div class="pay-info-desc">请在<span>分钟 秒</span>内完成支付</div>
+      </div>
+    </div>
+    <div class="bill-info-status finish" v-if="order.status === 'complete'">
+      <div class="pay-icon">
+        <img src="../assets/img/finish.png">
+      </div>
+      <div class="pay-info">
+        <div class="pay-info-status finish">已完成</div>
+      </div>
+    </div>
+    <div class="bill-info-status invalid" v-if="order.status === 'cancelled'">
+      <div class="pay-icon">
+        <img src="../assets/img/bill-invalid.png">
+      </div>
+      <div class="pay-info">
+        <div class="pay-info-status invalid">订单已取消</div>
+      </div>
+    </div>
     <div class="seat-content">
       <div class="seat-aside">
         <div style="display: flex">
@@ -24,7 +51,7 @@
             <div class="seat-aside-text">预计时长：120分钟</div>
           </div>
         </div>
-        <div style="padding: 5px 30px">
+        <div style="position: relative;padding: 5px 30px">
           <div class="d1"><span>地点：</span>{{ hall.name }}</div>
           <div class="d1" style="color: #f56c6c">
             <span>开场：</span>{{ show.startTime }}
@@ -34,7 +61,7 @@
           <el-divider></el-divider>
           <div class="d1">
             已选座位：
-            <el-tag v-for="(item, i) in userSelectSeats" :key="i"
+            <el-tag v-for="(item, i) in order.seat" :key="i"
                     type="danger"
                     style="margin-right: 5px"
                     effect="plain">
@@ -48,47 +75,11 @@
             >{{ order.price }}</span
             >
           </div>
-          <el-divider></el-divider>
-          <div style="padding: 0 50px;margin-top: 80px;">
-            <el-button @click="submitSeat" class="add-cart-btn" type="danger" round
-            >去结账
-            </el-button>
-          </div>
-        </div>
-      </div>
-
-      <div class="hall seat-select">
-        <div style="padding-left: 30px" class="seat-example">
-          <div class="selectable-example example">
-            <span>可选座位</span>
-          </div>
-          <div class="sold-example example">
-            <span>已售座位</span>
-          </div>
-          <div class="selected-example example">
-            <span>已选座位</span>
-          </div>
-        </div>
-
-        <div class="seats-block">
-          <div class="seats-container">
-            <div class="screen-container" style="left: 5px">
-              <div class="screen">舞台中央</div>
-              <div class="c-screen-line"></div>
-            </div>
-
-            <div class="seats-wrapper">
-              <div style="padding: 0 40px;width: 500px">
-                <span v-for="(item, index) in seats" :key="index">
-                  <!--不可选-->
-                  <span v-if="item.status === 0" class="seat sold item"/>
-                  <!--可选-->
-                  <span v-if="item.status === 1" @click="handleSelect(index)" class="seat selectable item"/>
-                  <!--已选-->
-                  <span v-if="item.status === 2" @click="handleDisSelect(index)" class="seat selected item"/>
-                </span>
-              </div>
-            </div>
+          <div class="submit-bill" v-if="order.status === 'created'">
+            <div>
+              <el-button @click="payForOrder(order.id)" type="primary" style="width: 200px; margin-top: 20px;" round>立即支付</el-button></div>
+            <div>
+              <el-button @click="cancelForOrder(order.id)" type="danger" style="width: 200px; margin-top: 20px;" round>取消订单</el-button></div>
           </div>
         </div>
       </div>
@@ -97,90 +88,38 @@
 </template>
 
 <script>
-import { getShowDetail } from '@/api/shows'
-import { createOrder } from '@/api/orders'
+import { cancelOrder, completeOrder, getOrderDetail } from '@/api/orders'
 
 export default {
+  name: 'Pay',
   data() {
     return {
-      order: {
-        showId: this.$route.query.id,
-        seats: '',
-        price: 0
-      },
       show: {},
-      hall: {},
-      seats: [],
-      userSelectSeats: [],
-      timer: null
+      order: {},
+      hall: {}
     }
   },
   created() {
-    this.renderInitialData()
+    this.setOrderDetail(this.$route.query.id)
   },
   methods: {
-    async setShowDetail(id) {
-      const res = await getShowDetail(id)
-      this.show = res.data
+    async setOrderDetail() {
+      const { data } = await getOrderDetail(this.$route.query.id)
+      this.order = data
+      this.show = this.order.show
       this.hall = this.show.hall
-      console.log(this.show)
-      console.log(this.hall)
     },
-    //0 已选
-    //1 可选
-    //2 已选中
-    loadSeats() {
-      const n = this.hall.seatsNumber
-      let arr = new Array(n)
-      for (let i = 0; i < n; i++) {
-        if (this.show.selectedSeat.indexOf(i + 1) === -1) {
-          arr[i] = {seat: i + 1, status: 1}
-        } else {
-          arr[i] = {seat: i + 1, status: 0}
-        }
-      }
-      this.seats = arr
+    async cancelForOrder(id) {
+      const { data } = await cancelOrder(id)
+      this.order = data
+      this.show = this.order.show
     },
-    renderInitialData() {
-      let timerId = setInterval(async () => {
-        await this.setShowDetail(this.$route.query.id)
-        this.loadSeats()
-      }, 1000)
-      this.$once('hook:beforeDestory', () => {
-        clearInterval(timerId)
-      })
-    },
-    handleSelect(index) {
-      if (this.userSelectSeats.length >= 4) {
-        let d = this.userSelectSeats[0] - 1
-        this.seats[d].status = 1
-        this.userSelectSeats.splice(0, 1)
-      }
-      this.userSelectSeats.push(index + 1)
-      this.seats[index].status = 2
-      this.order.price = (this.show.price) * (this.userSelectSeats.length)
-    },
-    handleDisSelect(index) {
-      this.seats[index].status = 1
-      this.userSelectSeats.splice(this.userSelectSeats.indexOf(index + 1), 1)
-      this.order.price = (this.show.price) * (this.userSelectSeats.length)
-    },
-    checkSeats() {
-      if (this.userSelectSeats.length === 0) {
-        this.$message({
-          message: '请选择要订购的座位',
-          type: 'warning'
-        });
-        return false;
-      }
-      return true;
-    },
-    submitSeat() {
-      if (this.checkSeats()) {
-        this.order.seats = this.userSelectSeats
-      } else return
+    async payForOrder(id) {
+      const { data } = await completeOrder(id)
+      this.order = data
+      this.show = this.order.show
     }
-  },
+  }
 };
 </script>
 
@@ -193,11 +132,13 @@ export default {
 
 .seat-content {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-  height: 850px;
+  width: 70%;
+  margin: 0 auto;
+  height: 600px;
 }
 
 .seat-aside {
-  width: 30%;
+  width: 100%;
   height: 100%;
   float: left;
   background: #f5f6f7;
@@ -249,5 +190,74 @@ export default {
 ::v-deep .el-input__inner {
   border-radius: 50px;
   height: 55px;
+}
+
+.bill-info-status{
+  margin: 0 auto;
+  width: 70%;
+  height: 120px;
+  background: #FFFBF2;
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.pay-icon{
+  width: 40px;
+  height:40px;
+  margin-left: 50px;
+}
+
+.pay-icon>img{
+  width: 100%;
+  height: 100%;
+}
+
+.pay-info{
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.pay-info-status{
+  color: #FAAF00;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.pay-info-desc{
+  color: #999;
+  font-size: 13px;
+}
+
+.pay-info-desc>span{
+  font-size: 16px;
+  color: #faaf00;
+  margin: 5px 5px;
+}
+
+.bill-info-status.finish{
+  background: #F4FFF8;
+}
+
+.bill-info-status.invalid{
+  background: #FFE0E0;
+}
+
+.pay-info-status.finish{
+  color: #26CE61;
+}
+
+.pay-info-status.invalid{
+  color: #faaaaa;
+}
+
+.submit-bill {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 40px;
+  position: absolute;
+  right: 50px;
+  bottom: 10px;
 }
 </style>

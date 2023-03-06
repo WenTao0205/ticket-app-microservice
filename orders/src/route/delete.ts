@@ -32,7 +32,7 @@ router.delete('/api/orders/:orderId', requireAuth, async (req: Request, res: Res
     showId: order.show.id
   })
 
-  res.status(204).send(order)
+  res.status(201).send(order)
 })
 
 export { router as deleteOrderRouter }

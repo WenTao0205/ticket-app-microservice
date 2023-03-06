@@ -101,6 +101,7 @@ import { getShowDetail } from '@/api/shows'
 import { createOrder } from '@/api/orders'
 
 export default {
+  name: 'Seat',
   data() {
     return {
       order: {
@@ -150,12 +151,12 @@ export default {
       }
       this.userSelectSeats.push(index + 1)
       this.seats[index].status = 2
-      this.order.price = (this.show.price) * (this.userSelectSeats.length)
+      this.order.price = ((this.show.price) * (this.userSelectSeats.length)).toFixed(1)
     },
     handleDisSelect(index) {
       this.seats[index].status = 1
       this.userSelectSeats.splice(this.userSelectSeats.indexOf(index + 1), 1)
-      this.order.price = (this.show.price) * (this.userSelectSeats.length)
+      this.order.price = ((this.show.price) * (this.userSelectSeats.length)).toFixed(1)
     },
     checkSeats() {
       if (this.userSelectSeats.length === 0) {
@@ -170,8 +171,8 @@ export default {
     async submitSeat() {
       if (this.checkSeats()) {
         this.order.seat = this.userSelectSeats
-        const res = await createOrder(this.order)
-        console.log(res)
+        const { data } = await createOrder(this.order)
+        this.$router.push({ name: 'Pay', query: { id: data.id } })
       } else return
     }
   },

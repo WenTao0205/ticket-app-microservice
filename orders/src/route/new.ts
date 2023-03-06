@@ -8,7 +8,7 @@ import { natsWrapper } from '../nats-wrapper'
 
 const router = express.Router()
 
-const EXPIRATION_WINDOW_SECONDS = 1 * 10
+const EXPIRATION_WINDOW_SECONDS = 15 * 60
 
 router.post('/api/orders',
 requireAuth,
@@ -32,7 +32,7 @@ async (req: Request, res: Response) => {
 
   // 确保座位没有被选
   for(let i of seat) {
-    if(show.selectedSeat?.includes(i)) throw new Error('座位已被预订')
+    if(show.selectedSeat?.includes(i)) throw new BadRequestError('有座位已被预订，请重新选购')
   }
   for(let i of seat) show.selectedSeat?.push(i)
   await show.save()

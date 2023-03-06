@@ -51,7 +51,8 @@ const routes = [
       },
       {
         path: '/pay',
-        name: 'Pay'
+        name: 'Pay',
+        component: () => import("@/views/Pay")
       },
       {
         path: '/me',

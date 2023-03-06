@@ -7,6 +7,7 @@ const router = express.Router()
 
 router.put('/api/orders/:orderId', requireAuth, async (req: Request, res: Response) => {
   const { orderId } = req.params
+  console.log(orderId)
   const order = await Order.findById(orderId).populate('show')
   
   // 检查订单是否存在
