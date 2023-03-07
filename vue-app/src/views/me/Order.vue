@@ -1,146 +1,55 @@
 <template>
   <div style="width: 100%">
     <h3 style="letter-spacing: 1px;font-weight: 400;padding-bottom: 20px">我的订单</h3>
-
-    <div v-loading="loading">
-      <el-card v-for="(item, index) in orderList" :key="index" class="box-card">
+    <div>
+      <el-card v-for="(item) in orderList" :key="item.id" class="box-card">
         <div>
-          <img class="item-film-img" alt="" :src="item.film.cover"/>
+          <img class="item-film-img" alt="" :src="require('../../assets/img/film.png')"/>
           <div style="float: left;">
-            <div class="item-film-name">《{{ item.film.name }}》</div>
-            <div class="item-film-seat">订购座位 : {{ item.order.seats }}</div>
-            <div class="item-film-time">下单时间 : {{ item.order.createAt }}</div>
-            <div v-if="item.order.status === 2" class="item-film-time">支付时间 : {{ item.order.payAt }}</div>
+            <div class="item-film-name">《{{ item.show.title }}》</div>
+            <div class="item-film-seat">订购座位 : {{ item.seat }}</div>
+            <div class="item-film-time">演出时间 : {{ item.show.startTime }}</div>
           </div>
           <el-button type="text"
-                     @click="handlePay(item.order, index)"
-                     v-if="item.order.status === 0"
+                     @click="toOrderDetail(item.id)"
+                     v-if="item.status === 'created'"
                      style="line-height: 75px"
                      class="o1">
             等待支付
           </el-button>
-          <div v-if="item.order.status === 2" style="color: #E6A23C" class="o1">订单取消</div>
-          <div v-if="item.order.status === 1" style="color: #67C23A" class="o1">支付成功</div>
-          <div class="o2">￥{{ item.order.price }}</div>
+          <div v-if="item.status === 'cancelled'" @click="toOrderDetail(item.id)" style="color: #E6A23C" class="o1">订单取消</div>
+          <div v-if="item.status === 'complete'" @click="toOrderDetail(item.id)" style="color: #67C23A" class="o1">支付成功</div>
+          <div class="o2">￥{{ item.price }}</div>
         </div>
       </el-card>
     </div>
-
-    <el-dialog
-        title="扫码支付"
-        :show-close="false"
-        width="30%"
-        :visible.sync="centerDialogVisible"
-    >
-      <div>
-        <img class="c-img" src="../../assets/img/c.jpeg" alt="">
-      </div>
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="submitPay">支 付 成 功</el-button>
-  </span>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-import {FindOrderByUser, PayForOrder} from "@/api/order";
+import { getOrderList } from '@/api/orders'
 
 export default {
   name: "Order",
-
   data() {
     return {
-      centerDialogVisible: false,
-      loading: false,
-      orderList: [
-        {
-          film: {
-            name: '燃烧',
-            cover: require('../../assets/img/film.png')
-          },
-          order: {
-            seats: '1排1座',
-            createAt: '2000-10-01',
-            status: 0
-          }
-        },
-        {
-          film: {
-            name: '燃烧',
-            cover: require('../../assets/img/film.png')
-          },
-          order: {
-            seats: '1排1座',
-            createAt: '2000-10-01',
-            status: 1
-          }
-        },
-        {
-          film: {
-            name: '燃烧',
-            cover: require('../../assets/img/film.png')
-          },
-          order: {
-            seats: '1排1座',
-            createAt: '2000-10-01',
-            status: 2
-          }
-        }
-      ],
-      payOrderId: '',
+      orderList: [],
+      seats: ''
     }
   },
-
-  methods: {
-
-    loadOrder() {
-      this.loading = true
-      FindOrderByUser(localStorage.getItem("uid")).then(res => {
-        setTimeout(() => {
-          this.orderList = res.data
-          this.loading = false
-        }, 700)
-      })
-    },
-
-    handlePay(order, index) {
-      this.open(order, index);
-    },
-
-    open(order, index) {
-      this.$confirm('请您仔细确认订单金额为' + order.price + '元, 是否继续?', '提示', {
-        confirmButtonText: '确认支付',
-        cancelButtonText: '取消支付',
-        type: 'success',
-        center: true
-      }).then(() => {
-        this.loading = true
-        this.centerDialogVisible = true
-        this.payOrderId = order.id
-      }).catch(() => {
-        this.$message({
-          type: 'warning',
-          message: '用户已取消支付'
-        });
-      });
-    },
-
-    submitPay() {
-      PayForOrder(this.payOrderId).then(res => {
-        this.loadOrder();
-        this.centerDialogVisible = false
-        if (res.success) {
-          this.$message({
-            type: 'success',
-            message: '恭喜你支付成功!'
-          });
-        }
-      })
-    },
-
+  created() {
+    this.setOrderList()
   },
-
+  methods: {
+    async setOrderList() {
+      const { data } = await getOrderList()
+      this.orderList = data
+      console.log(this.orderList)
+    },
+    toOrderDetail(id) {
+      this.$router.push({ name: 'Pay', query: { id } })
+    }
+  }
 }
 </script>
 
@@ -195,7 +104,8 @@ export default {
 .o1 {
   float: right;
   line-height: 100px;
-  padding-right: 20px
+  padding-right: 20px;
+  cursor: pointer;
 }
 
 .o2 {

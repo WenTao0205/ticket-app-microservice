@@ -120,13 +120,14 @@ export default {
     await this.setShowDetail(this.$route.query.id)
     this.loadSeats()
   },
+  beforeDestory() {
+    console.log('aaa')
+  },
   methods: {
     async setShowDetail(id) {
       const res = await getShowDetail(id)
       this.show = res.data
       this.hall = this.show.hall
-      console.log(this.show)
-      console.log(this.hall)
     },
     //0 已选
     //1 可选

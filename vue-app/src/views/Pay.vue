@@ -12,7 +12,7 @@
       </div>
       <div class="pay-info">
         <div class="pay-info-status">待支付</div>
-        <div class="pay-info-desc">请在<span>分钟 秒</span>内完成支付</div>
+        <div class="pay-info-desc">请在<span>{{ minutes }} 分钟 {{ seconds }} 秒</span>内完成支付</div>
       </div>
     </div>
     <div class="bill-info-status finish" v-if="order.status === 'complete'">
@@ -96,11 +96,14 @@ export default {
     return {
       show: {},
       order: {},
-      hall: {}
+      hall: {},
+      minutes: 0,
+      seconds: 0
     }
   },
-  created() {
-    this.setOrderDetail(this.$route.query.id)
+  async created() {
+    await this.setOrderDetail(this.$route.query.id)
+    this.setTimer()
   },
   methods: {
     async setOrderDetail() {
@@ -118,6 +121,26 @@ export default {
       const { data } = await completeOrder(id)
       this.order = data
       this.show = this.order.show
+      console.log(this.order)
+    },
+    setTimer() {
+      if(this.order.status === 'created') {
+        let timer = null
+        let _this = this
+        timer = setInterval(() => {
+          let timeleft = new Date(_this.order.expiresAt) - new Date()
+          _this.convertTime(timeleft)
+        }, 1000)
+        this.$once('hook:beforeDestory', () => {
+          clearInterval(timer)
+          timer = null
+        })
+      }
+    },
+    async convertTime(timeleft) {
+      if(timeleft <= 0) await this.setOrderDetail()
+      this.minutes = parseInt((timeleft % (1000 * 60 * 60)) / (1000 * 60))
+      this.seconds = ((timeleft % (1000 * 60)) / 1000).toFixed(0)
     }
   }
 };
