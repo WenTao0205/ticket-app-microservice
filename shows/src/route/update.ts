@@ -10,7 +10,7 @@ const router = express.Router()
 router.put('/api/show',
 requireAuth,
 async (req: Request, res: Response) => {
-  const show = await Show.findById(req.body.showId).populate('hall')
+  const show = await Show.findById(req.body.id).populate('hall')
   if(!show) throw new NotFoundError()
 
   const hall = await Hall.findById(req.body.hallId)
@@ -21,6 +21,7 @@ async (req: Request, res: Response) => {
 
   await show.save()
   await new ShowUpdatedPublisher(natsWrapper.client).publish({
+    id: show._id,
     title: show.title,
     intro: show.intro,
     price: show.price,
@@ -31,7 +32,7 @@ async (req: Request, res: Response) => {
     version: show.version
   })
 
-  res.status(201).send({})
+  res.status(200).send(show)
 })
 
 export { router as updateShowRouter }

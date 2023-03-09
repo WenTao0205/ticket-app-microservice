@@ -5,15 +5,24 @@ import { natsWrapper } from '../nats-wrapper'
 
 const router = express.Router()
 
-router.delete('/api/show/:showId',
+router.delete('/api/show',
 requireAuth,
 async (req: Request, res: Response) => {
-  const show = await Show.findById(req.params.showId).populate('hall')
-  if(!show) throw new NotFoundError()
+  const { ids } = req.body
   
-  await Show.findByIdAndDelete(req.params.showId)
+  for(let id of ids) {
+    let hall = await Show.findById(id)
+    if(!hall) throw new NotFoundError()
+    hall = null
+  }
 
-  res.status(204).send({})
+  const data = await Show.deleteMany({
+    _id: {
+      $in: ids
+    }
+  })
+
+  res.status(200).send(data)
 })
 
 export { router as deleteShowRouter }

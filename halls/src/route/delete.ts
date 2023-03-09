@@ -4,13 +4,22 @@ import { Hall } from '../models/hall'
 
 const router = express.Router()
 
-router.delete('/api/hall/:hallId', requireAuth, async (req: Request, res: Response) => {
-  const hall = await Hall.findById(req.params.hallId)
-  if(!hall) throw new NotFoundError()
+router.delete('/api/hall', requireAuth, async (req: Request, res: Response) => {
+  const { ids } = req.body
+  
+  for(let id of ids) {
+    let hall = await Hall.findById(id)
+    if(!hall) throw new NotFoundError()
+    hall = null
+  }
 
-  await Hall.findByIdAndDelete(req.params.hallId)
+  const data = await Hall.deleteMany({
+    _id: {
+      $in: ids
+    }
+  })
 
-  res.status(204).send({})
+  res.status(200).send(data)
 })
 
 export { router as deleteHallRouter }

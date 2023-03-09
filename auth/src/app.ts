@@ -10,6 +10,7 @@ import { signoutRouter } from './route/signout'
 import { signupRouter } from './route/signup'
 import { getAllUsers } from './route/getuser'
 import { alterUserInfo } from './route/alteruserinfo'
+import { deleteUser } from './route/deleteuser'
 
 // error
 import { errorHandler, NotFoundError } from '@zwt-tickets/common'
@@ -33,6 +34,7 @@ app.use(signoutRouter)
 app.use(signupRouter)
 app.use(getAllUsers)
 app.use(alterUserInfo)
+app.use(deleteUser)
 
 app.all('*', async (req, res) => {
   throw new NotFoundError()

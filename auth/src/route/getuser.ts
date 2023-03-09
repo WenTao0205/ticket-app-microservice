@@ -5,11 +5,11 @@ import { User } from '../models/user'
 
 const router = express.Router()
 
-router.get('/api/users',
+router.post('/api/users',
 currentUser,
 requireAuth,
 async (req: Request, res: Response) => {
-  const users = await User.find()
+  const users = await User.find(req.body)
 
   res.status(200).send(users)
 }

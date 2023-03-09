@@ -25,7 +25,7 @@ async (req: Request, res: Response) => {
     version: hall.version
   })
 
-  res.status(201).send(hall)
+  res.status(200).send(hall)
 })
 
 export { router as updateHallRouter }
