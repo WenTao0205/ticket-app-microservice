@@ -41,7 +41,6 @@ async (req: Request, res: Response) => {
       sex: existingUser.sex,
       birthDate: existingUser.birthDate,
       personalIntro: existingUser.personalIntro,
-      rate: existingUser.rate,
       createAt: existingUser.createdAt,
       updateAt: existingUser.updatedAt
     },

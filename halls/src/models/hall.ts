@@ -6,6 +6,7 @@ interface HallAttrs {
   city: string
   address: string
   seatsNumber: Number
+  // sections: Array<Object>
 }
 
 interface HallDoc extends mongoose.Document {
@@ -13,6 +14,7 @@ interface HallDoc extends mongoose.Document {
   city: string
   address: string
   seatsNumber: Number
+  // sections: Array<Object>
   version: number
 }
 
@@ -38,6 +40,10 @@ const hallSchema = new mongoose.Schema(
       type: Number,
       required: true
     }
+    // sections: {
+    //   type: [{ name: String, row: Number, column: Number }],
+    //   required: true
+    // }
   },
   {
     toJSON: {

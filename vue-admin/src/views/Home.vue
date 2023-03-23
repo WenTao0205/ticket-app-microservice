@@ -27,7 +27,7 @@
               <!--图标-->
               <i :class="iconList[item.id]"></i>
               <!--文本-->
-              <span>{{ item.name }}</span>
+              <span slot="title">{{ item.name }}</span>
             </template>
           </el-menu-item>
         </el-menu>
@@ -61,8 +61,6 @@ export default {
       },
       isCollapsed: false
     }
-  },
-  created(){
   },
   methods: {
     toSubMenu(url) {

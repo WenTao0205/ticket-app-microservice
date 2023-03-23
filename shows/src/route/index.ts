@@ -3,9 +3,11 @@ import { Show } from '../model/show'
 
 const router = express.Router()
 
-router.get('/api/show',
+router.post('/api/show',
 async (req: Request, res: Response) => {
-  const shows = await Show.find({}).populate('hall')
+  const condition = req.body
+  for(let key in condition) condition[key] = new RegExp(condition[key])
+  const shows = await Show.find(condition).populate('hall')
 
   res.status(200).send(shows)
 })

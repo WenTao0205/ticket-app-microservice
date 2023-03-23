@@ -9,7 +9,9 @@ router.post('/api/users',
 currentUser,
 requireAuth,
 async (req: Request, res: Response) => {
-  const users = await User.find(req.body)
+  const condition = req.body
+  for(let key in condition) condition[key] = new RegExp(condition[key])
+  const users = await User.find(condition)
 
   res.status(200).send(users)
 }

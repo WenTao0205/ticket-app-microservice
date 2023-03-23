@@ -98,35 +98,20 @@
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="演出封面" prop="cover">
+          <el-upload
+            action="#"
+            list-type="picture-card"
+            :limit="1"
+            :show-file-list="true"
+            :http-request="handleUpload"
+            :before-remove="handleRemove">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="演出简介" prop="intro">
           <el-input type="textarea" :rows="5" v-model="addForm.intro"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="演出封面">
-          <el-upload action="" list-type="picture-card"
-                     :auto-upload="false" :limit="1"
-                     :file-list="poster" :on-exceed="handleExceed"
-                     :on-change="handleChangeP"
-                     :on-success="handleSuccessP"
-                     :on-error="handleError" ref="posterRef"
-                     :http-request="submitFileP">
-            <i slot="default" class="el-icon-plus" ></i>
-            <div slot="file" slot-scope="{file}">
-              <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-              <span class="el-upload-list__item-actions">
-                <span class="el-upload-list__item-preview" @click="handlePictureCardPreviewP(file)">
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-                <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemoveP(file)">
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-            </div>
-          </el-upload>
-          放大预览
-          <el-dialog :visible.sync="dialogVisible" append-to-body>
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
-        </el-form-item> -->
       </el-form>
       <!--底部区域-->
       <span slot="footer" class="dialog-footer">
@@ -171,35 +156,15 @@
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="演出封面" prop="cover">
+          <el-image
+            style="width: 148px;height: 148px;"
+            :src="editForm.cover"
+            :preview-src-list="[editForm.cover]"
+          ></el-image>
+        </el-form-item>
         <el-form-item label="演出简介" prop="intro">
           <el-input type="textarea" :rows="5" v-model="editForm.intro"></el-input>
-        </el-form-item>
-<!--        修改封面-->
-        <el-form-item label="演出封面">
-          <el-upload action="" list-type="picture-card"
-                     :auto-upload="false" :limit="1"
-                     :file-list="poster" :on-exceed="handleExceed"
-                     :on-change="handleChangeP"
-                     :on-success="handleSuccessP"
-                     :on-error="handleError" ref="posterEditRef"
-                     :http-request="submitFileP">
-            <i slot="default" class="el-icon-plus" ></i>
-            <div slot="file" slot-scope="{file}">
-              <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-              <span class="el-upload-list__item-actions">
-                <span class="el-upload-list__item-preview" @click="handlePictureCardPreviewP(file)">
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-                <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemoveP(file)">
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-            </div>
-          </el-upload>
-          <!--放大预览-->
-          <el-dialog :visible.sync="dialogVisible" append-to-body>
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -207,58 +172,21 @@
         <el-button type="primary" @click="editShowInfo">确 定</el-button>
       </span>
     </el-dialog>
-
-<!--    演出类型管理界面-->
-    <el-dialog title="演出类型管理" :visible.sync="editCategoryVisible" width="60%" @close="editCategoryDialogClosed">
-<!--      <template>-->
-<!--        <el-checkbox-group-->
-<!--            v-model="selectedShowCategory">-->
-<!--          <el-checkbox v-for="category in showCategoryList" :label="category.showCategoryName" :key="category.showCategoryId">{{category.showCategoryName}}</el-checkbox>-->
-<!--        </el-checkbox-group>-->
-<!--      </template>-->
-      <!-- <el-form label-width="100px">
-        <el-form-item label="演出类型" prop="showActor">
-          <el-select v-model="selectedShowCategory" placeholder="请选择类型名称" clearable>
-            <el-option
-                v-for="item in categoryList"
-                :key="item.showCategoryId"
-                :label="item.showCategoryName"
-                :value="item.showCategoryId"
-                v-if="ifShow(item.showCategoryId)">
-            </el-option>
-          </el-select>
-        <el-button type="primary" @click="addCategory()">添加</el-button>
-        </el-form-item>
-        <el-form-item>
-              <el-tag
-                  v-for="tag in editCategoryForm"
-                  :key="tag.showCategoryName"
-                  closable
-                  @close="deleteCategory(tag.showCategoryId)">
-                {{tag.showCategoryName}}
-              </el-tag>
-        </el-form-item>
-      </el-form> -->
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getShowList, createShow, updateShow, deleteShow } from '@/api/shows'
 import { getHallList } from '@/api/hall'
+import { uploadPic, deletePic } from '@/plugins/cos.js'
 
 export default {
   name: "ShowInfo",
   data() {
     return {
       queryInfo: {
-        showId: '',
-        showArea: '',
-        showName: '',
-        startDate: '',
-        endDate: '',
-        pageNum: 1,
-        pageSize: 7
+        title: '',
+        hallName: ''
       },
       total: 0,
       //控制对话框的显示与隐藏
@@ -270,8 +198,6 @@ export default {
       categoryList:[],
       hallList: [],
       showList: [],
-      showAreaList: ["中国大陆", "美国", "韩国", "日本", "中国香港", "中国台湾", "泰国", "印度",
-        "法国", "英国", "俄罗斯", "意大利", "西班牙", "德国", "波兰", "澳大利亚", "伊朗", "其他"],
       editForm: {
         hall: {
           id: ''
@@ -286,17 +212,6 @@ export default {
       dialogVisible: false,
       dialogImageUrl: '',
       disabled:false,
-      //演出封面增删变量
-      poster: [],
-      //发送给后端的JSON图片
-      posterL: [],
-      deletePostList:[],
-      //添加删除图片集 动态绑定图片列表
-      pics: [],
-      // 发送给后端的JSON图片数组
-      pictureList: [],
-      picNums:0,
-      deletePicList:[],
       addHallId: '',
       //添加演出表单数据
       addForm: {},
@@ -334,78 +249,19 @@ export default {
   },
   methods: {
     async setShowList() {
-      const { data: show } = await getShowList()
-      const { data: hall } = await getHallList()
+      const showSearch = {}
+      const hallSearch = {}
+      if(this.inputShowName) showSearch.title = this.inputShowName
+      if(this.selectedShowHall) hallSearch.name = this.selectedShowHall
+
+      const { data: show } = await getShowList(showSearch)
+      const { data: hall } = await getHallList(hallSearch)
       this.showList = show
       this.hallList = hall
-    },
-    getCategoryList() {
-      const _this = this
-      axios.get('sysShowCategory/find').then(resp=>{
-        _this.categoryList = resp.data.data;
-        console.log(_this.categoryList)
-      })
-    },
-    ifShow(id) {
-      let l = true
-      for (let i = 0; i < this.editCategoryForm.length; i++) {
-        if (id === this.editCategoryForm[i].showCategoryId) {
-          l =false
-        }
-      }
-      return l
-    },
-    handleSizeChange(newSize) {
-      this.queryInfo.pageSize = newSize
-      this.setShowList()
-      console.log(newSize)
-    },
-    handleCurrentChange(newPage) {
-      this.queryInfo.pageNum = newPage
-      this.setShowList()
-      console.log(newPage)
-    },
-    async submitFile() {
-      const _this = this
-      for (let i = 0; i < this.pics.length; i++) {
-        let formData = new FormData()
-        if (this.pics[i].status === 'success') {
-          let s = this.pics[i].url
-          this.pictureList.push(s.substring(s.indexOf('/images')))
-          continue
-        }
-        let file = this.pics[i].raw
-        formData.append('file', file)
-        await axios.post('upload/show', formData).then(response => {
-          _this.pictureList.push(response.data.data)
-        })
-      }
-    },
-    async submitFileP() {
-      const _this = this
-      for (let i = 0; i < this.poster.length; i++) {
-        let formData = new FormData()
-        if (this.poster[i].status === 'success') {
-          let s = this.poster[i].url
-          this.posterL.push(s.substring(s.indexOf('/images')))
-          continue
-        }
-        let file = this.poster[i].raw
-        formData.append('file', file)
-        await axios.post('upload/show', formData).then(response => {
-          _this.posterL.push(response.data.data)
-        })
-      }
     },
     // 监听添加对话框的关闭事件
     addDialogClosed() {
       this.$refs.addFormRef.resetFields()
-      // this.$refs.pictureRef.clearFiles()
-      // this.$refs.posterRef.clearFiles()
-      // this.poster = []
-      // this.posterL=[]
-      // this.pics = []
-      // this.pictureList = []
     },
     // 监听添加按钮
     async addShow() {
@@ -425,12 +281,6 @@ export default {
     // 监听修改对话框的关闭事件
     editDialogClosed() {
       this.$refs.editFormRef.resetFields()
-      // this.$refs.pictureEditRef.clearFiles()
-      // this.$refs.posterEditRef.clearFiles()
-      // this.pics = []
-      // this.pictureList = []
-      // this.posterL = []
-      // this.poster = []
     },
     //监听修改类别对话框的关闭事件
     editCategoryDialogClosed(){
@@ -448,52 +298,19 @@ export default {
       this.setShowList()
       this.$message.success('修改演出信息成功！')
     },
-    handleChange(file, filelist) {
-      this.pics = filelist.slice(0)
-      console.log(this.pics)
+    handleUpload(res) {
+      uploadPic(res.file, res.file.name).then(r => {
+        console.log(r)
+        this.addForm.cover = `https://${r.Location}`
+        console.log(this.addForm)
+      })
     },
-    handleChangeP(file, filelist) {
-      this.poster = filelist
-      console.log(this.poster)
-    },
-    handleSuccess(response) {
-      this.pictureList.push(response.data)
-      this.addForm = JSON.stringify(this.pictureList)
-      this.editForm = JSON.stringify(this.pictureList)
-    },
-    handleSuccessP(response) {
-      this.posterL.push(response.data)
-      this.addForm = JSON.stringify(this.posterL)
-      this.editForm = JSON.stringify(this.posterL)
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handlePictureCardPreviewP(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleRemove(file,filelist) {
-      const filePath = file.url
-      console.log(filePath)
-      const idx = this.pics.findIndex(x => x.url === filePath)
-      if(file.status === 'success'){
-        this.deletePicList.push(file.url)
-      }
-      this.pics.splice(idx, 1)
-    },
-    handleRemoveP(file) {
-      const filePath = file.url
-      console.log(filePath)
-      const idx = this.poster.findIndex(x=> x.url === filePath)
-      if(file.status === 'success'){
-        this.deletePostList.push(file.url)
-      }
-      this.poster.splice(idx,1)
-    },
-    handleError(err) {
-      console.log(err)
+    handleRemove(file) {
+      console.log(file)
+      deletePic(file.name).then(r => {
+        this.addForm.cover = ''
+        console.log(this.addForm)
+      })
     },
     toShowInfo(id) {
       window.open('http://localhost:8081/showInfo/' + id)
@@ -502,21 +319,6 @@ export default {
     async showEditDialog(data) {
       this.editForm = data
       this.editDialogVisible = true
-    },
-    //显示修改类别对话框,回显数据
-    async showEditCategoryDialog(id){
-      const _this = this
-      _this.showId = id
-      await axios.get('sysShow/find/'+id).then(response=>{
-        _this.editCategoryForm = response.data.data.showCategoryList
-        })
-      this.editCategoryVisible = true
-    },
-    //取消修改
-    cancelEdit(){
-      this.editDialogVisible = false
-      this.deletePicList.splice(0,this.deletePicList.length)
-      this.deletePostList.splice(0,this.deletePostList.length)
     },
     // 监听多选框变化
     handleSelectionChange(val) {
@@ -572,34 +374,6 @@ export default {
       }
       this.setShowList()
       this.$message.success('删除演出信息成功！')
-    },
-    async deleteCategory(categoryId){
-      console.log('类型id')
-      console.log(categoryId)
-      const _this = this
-      await axios.delete('sysShowToCategory/'+this.showId+'/'+categoryId).then(resp=>{
-        console.log(resp)
-        _this.$message.success('删除类型成功')
-      })
-      await axios.get('sysShow/find/'+this.showId).then(response=>{
-        _this.editCategoryForm = response.data.data.showCategoryList
-      })
-    },
-    handleExceed(){
-      this.$message.error('演出封面不能超过一张!')
-    },
-    async addCategory(){
-      const _this = this
-      await axios.post('sysShowToCategory/'+this.showId+'/'+this.selectedShowCategory).then(resp=>{
-        console.log(resp)
-        if (resp.data.code !==200) return this.$alert('添加演出类别失败', '添加演出类别异常通知', {
-          confirmButtonText: '我知道了'
-        })
-        this.$message.success("添加演出类别成功")
-      })
-      axios.get('sysShow/find/'+this.showId).then(response=>{
-        _this.editCategoryForm = response.data.data.showCategoryList
-      })
     }
   }
 }
@@ -617,5 +391,10 @@ export default {
 }
 .el-select-search{
   margin: 0 0px 0px 20px;
+}
+
+::v-deep .el-form-item .cover {
+  width: 145px;
+  height: 145px;
 }
 </style>

@@ -166,12 +166,13 @@ export default {
   },
   created() {
     this.setHallList()
-    // this.getHallCategoryList()
-    // this.curCinemaName = this.loginUser.cinemaName
   },
   methods: {
     async setHallList() {
-      const { data } = await getHallList()
+      const search = {}
+      if(this.inputHallName) search.name = this.inputHallName
+
+      const { data } = await getHallList(search)
       this.hallList = data
     },
     async getHallCategoryList(){

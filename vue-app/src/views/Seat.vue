@@ -7,7 +7,7 @@
     <div class="seat-content">
       <div class="seat-aside">
         <div style="display: flex">
-          <img style="padding: 30px" :src="require('../assets/img/showtest.jpg')" alt=""/>
+          <img style="padding: 30px" :src="show.cover" alt=""/>
           <div>
             <div
                 style="

@@ -1,9 +1,10 @@
 import axios from '../plugins/request'
 
-export function getShowList() {
+export function getShowList(data) {
   return axios({
     url: '/show',
-    method: 'get'
+    method: 'post',
+    data
   })
 }
 

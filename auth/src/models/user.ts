@@ -12,7 +12,6 @@ interface UserAttrs {
   sex?: string
   birthDate?: string
   personalIntro?: string
-  rate?: string
 }
 
 // An interface that describes the properties
@@ -30,7 +29,6 @@ interface UserDoc extends Document {
   sex?: string
   birthDate?: string
   personalIntro?: string
-  rate?: string
   createdAt: string
   updatedAt: string
 }
@@ -60,10 +58,6 @@ const userSchema = new Schema(
     default: ''
   },
   personalIntro: {
-    type: String,
-    default: ''
-  },
-  rate: {
     type: String,
     default: ''
   }

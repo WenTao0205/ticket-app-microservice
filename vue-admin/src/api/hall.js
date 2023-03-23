@@ -1,9 +1,10 @@
 import axios from '../plugins/request'
 
-export function getHallList() {
+export function getHallList(data) {
   return axios({
-    url: '/hall',
-    method: 'get'
+    url: '/hall/gethall',
+    method: 'post',
+    data
   })
 }
 

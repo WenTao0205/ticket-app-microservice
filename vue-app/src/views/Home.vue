@@ -11,8 +11,9 @@
       <div class="showList">
         <div class="showItem" v-for="item in showList" :key="item.id" @click="toShowDetail(item.id)">
           <div class="showItemCover">
-            <img :src="require('../assets/img/showtest.jpg')" style="object-fit: cover;" />
+            <img :src="item.cover" style="object-fit: cover;" />
           </div>
+          <div class="city">{{ item.hall.city }}</div>
           <div class="showItemTitle">
             <p class="title">{{ item.title }}</p>
           </div>
@@ -68,6 +69,7 @@ export default {
     justify-items: center;
     margin-top: 50px;
     .showItem {
+      position: relative;
       margin: 0 18px 18px 0;
       border: 1px solid #ebebeb;
       border-radius: 5px;
@@ -78,6 +80,17 @@ export default {
         img {
           border-radius: 5px 5px 0 0;
         }
+      }
+      .city {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: linear-gradient(-45deg,#262626,#464441);
+        opacity: .8;
+        border-radius: 2px;
+        font-size: 16px;
+        color: #fff;
+        padding: 2px 8px;
       }
       .showItemTitle {
         margin-top: 26px;

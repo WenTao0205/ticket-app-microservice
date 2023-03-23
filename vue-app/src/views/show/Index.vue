@@ -5,7 +5,7 @@
     </div>
 
     <div class="show-card">
-      <img alt="" style="width: 100%;height: 100%" :src="require('../../assets/img/showtest.jpg')">
+      <img alt="" style="width: 100%;height: 100%" :src="show.cover">
     </div>
 
     <div class="show-des">
@@ -22,7 +22,7 @@
       <el-page-header @back="goBack" content="详情页面">
       </el-page-header>
       <div class="introTitle" style="font-weight: bolder;font-size: 25px;padding-top: 40px;padding-bottom: 40px;">演出介绍</div>
-      <div style="line-height: 30px;text-indent:2.5em;padding-top: 20px;padding-bottom: 20px"> {{ show.intro }}
+      <div style="line-height: 30px;text-indent:2.5em;padding-top: 20px;padding-bottom: 20px;white-space: pre-line;"> {{ show.intro }}
       </div>
     </div>
 

@@ -8,6 +8,13 @@ export function getAllUser(data) {
   })
 }
 
+export function getUserNameById(id) {
+  return axios({
+    url: `/users/getusernamebyid/${id}`,
+    method: 'get'
+  })
+}
+
 export function alterUserInfo(data) {
   return axios({
     url: '/users/alteruserinfo',

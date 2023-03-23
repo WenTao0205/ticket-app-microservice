@@ -11,6 +11,7 @@ import { signupRouter } from './route/signup'
 import { getAllUsers } from './route/getuser'
 import { alterUserInfo } from './route/alteruserinfo'
 import { deleteUser } from './route/deleteuser'
+import { getUserNameById } from './route/getusernamebyid'
 
 // error
 import { errorHandler, NotFoundError } from '@zwt-tickets/common'
@@ -22,9 +23,9 @@ app.use(json())
 app.use(
   cookieSession({
     signed: false,
-    secure: false,
-    httpOnly: false,
-    maxAge: 24 * 60 * 60 * 1000
+    secure: true,
+    sameSite: 'none',
+    httpOnly: false
   })
 )
 
@@ -35,6 +36,7 @@ app.use(signupRouter)
 app.use(getAllUsers)
 app.use(alterUserInfo)
 app.use(deleteUser)
+app.use(getUserNameById)
 
 app.all('*', async (req, res) => {
   throw new NotFoundError()
