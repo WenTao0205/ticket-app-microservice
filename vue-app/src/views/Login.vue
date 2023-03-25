@@ -4,7 +4,7 @@
       <div class="login-form-header">
         <img
           style="width: 75px; height: 75px; float: left; padding-right: 40px"
-          src="../assets/img/logo.png"
+          src="../assets/img/logo2.png"
           alt=""
         />
         <div class="login-form-text">得票 - 登录</div>

@@ -2,7 +2,7 @@
   <div class="login_container">
     <div class="login_box">
       <div class="title_box">
-        <p>影院管理登录</p>
+        <p>得票管理登录</p>
       </div>
       <!-- 登录表单区域 -->
       <el-form class="login_form" :model="loginForm" ref="loginFormRef">
@@ -60,7 +60,8 @@ export default {
 
 <style scoped>
 .login_container{
-  background-image: url("../assets/login-background.jpg");
+  background-position: center center;
+  background-image: url("../assets/login-background4.jpg");
   height: 100%;
 }
 

@@ -2,7 +2,7 @@
   <div class="header">
     <div class="header-box" style="height: 70px;width: 100%">
       <div class="header-logo">
-        <img style="width: 50px; height: 50px;" src="../../assets/img/logo.png" alt=""/>
+        <img style="width: 50px; height: 50px;" src="../../assets/img/logo2.png" alt=""/>
         <div class="header-logo-text">得 票</div>
       </div>
       <div class="header-links">

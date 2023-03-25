@@ -1,21 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Message }from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 import Login from '../views/Login';
 import Welcome from "../views/Welcome";
 import Home from '../views/Home.vue';
-import CinemaInfo from "../views/cinema/CinemaInfo";
-import MovieInfo from "../views/movie/MovieInfo";
-import MovieCategory from "../views/movie/MovieCategory";
+import ShowInfo from "../views/show/ShowInfo";
+import ConcertShow from "../views/show/show-ranking-management/concertShow"
+import InstrumentShow from "../views/show/show-ranking-management/instrumentShow"
+import TheatricalShow from "../views/show/show-ranking-management/theatricalShow"
+import LivehouseShow from "../views/show/show-ranking-management/livehouseShow"
 import HallInfo from "../views/hall/HallInfo";
-import SessionInfo from "../views/hall/SessionInfo";
-import BillInfo from "../views/bill/BillInfo";
+import OrderInfo from "../views/order/OrderInfo";
 import UserInfo from "../views/user/UserInfo";
-import RoleInfo from "../views/role/RoleInfo";
-import ResourceInfo from "../views/role/ResourceInfo";
 import Error404 from "../views/Error404";
 
 Vue.use(VueRouter)
@@ -36,15 +34,15 @@ const routes = [
     redirect: '/welcome',
     children: [
       { path: '/welcome', name: 'Welcome', component: Welcome },
-      { path: '/cinema', name: 'Cinema', component: CinemaInfo },
-      { path: '/movie', name: 'Movie', component: MovieInfo },
-      { path: '/movieCategory', component: MovieCategory },
+      { path: '/show', name: 'Show', component: ShowInfo },
+      { path: '/show/concertHotManage', name: 'concertShow', component: ConcertShow },
+      { path: '/show/instrumentHotManage', name: 'instrumentShow', component: InstrumentShow },
+      { path: '/show/theatricalHotManage', name: 'theatricalShow', component: TheatricalShow },
+      { path: '/show/livehouseHotManage', name: 'livehouseShow', component: LivehouseShow },
+
       { path: '/hall', name: 'Hall', component: HallInfo },
-      { path: '/session', component: SessionInfo },
       { path: '/user', name: 'User', component: UserInfo },
-      { path: '/bill', name: 'Bill', component: BillInfo },
-      { path: '/role', component: RoleInfo },
-      { path: '/resource', component: ResourceInfo }
+      { path: '/order', name: 'Order', component: OrderInfo }
     ]
   },
   {
@@ -54,7 +52,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes,
+  routes
 })
 
 router.afterEach(() => {

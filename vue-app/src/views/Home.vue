@@ -2,7 +2,7 @@
   <div class="app">
 
     <div class="main">
-      <el-carousel>
+      <el-carousel type="card" :interval="6000" loop>
         <el-carousel-item v-for="item in posterList" :key="item.url">
           <img :src="item.url" alt/>
         </el-carousel-item>
@@ -37,10 +37,10 @@ export default {
     return {
       showList: [],
       posterList: [
-        {url: require('../assets/img/carousel1.jpg')},
-        {url: require('../assets/img/carousel2.jpg')},
-        {url: require('../assets/img/carousel3.jpg')},
-        {url: require('../assets/img/carousel4.jpg')}
+        {url: 'https://img0.tking.cn/mtl/default/img/HEy43fam6j_.png'},
+        {url: 'https://img0.tking.cn/mtl/default/img/xyTmMSH6tG_.png'},
+        {url: 'https://img0.tking.cn/mtl/default/img/XCCJ5iY6rZ_.jpg'},
+        {url: 'https://img0.tking.cn/mtl/default/img/zP8MNpJz5p_.jpg'}
       ]
     }
   },

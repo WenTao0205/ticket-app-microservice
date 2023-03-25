@@ -5,6 +5,8 @@ import { HallDoc } from './hall';
 interface ShowAttrs {
   title: string
   price: string
+  type: string
+  rank?: string
   intro?: string
   cover?: string
   startTime: string
@@ -16,6 +18,8 @@ interface ShowAttrs {
 interface ShowDoc extends mongoose.Document {
   title: string
   price: string
+  type: string
+  rank?: string
   intro?: string
   cover?: string
   startTime: string
@@ -38,6 +42,14 @@ const showSchema = new mongoose.Schema(
     price: {
       type: String,
       required: true,
+    },
+    type: {
+      type: String,
+      required: true
+    },
+    rank: {
+      type: String,
+      default: '无'
     },
     intro: {
       type: String,

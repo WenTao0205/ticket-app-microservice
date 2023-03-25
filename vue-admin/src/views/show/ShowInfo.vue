@@ -5,7 +5,6 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>演出管理</el-breadcrumb-item>
-        <el-breadcrumb-item>演出信息</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
@@ -41,10 +40,10 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="#" width="250"></el-table-column>
       <el-table-column prop="title" label="演出名称"></el-table-column>
+      <el-table-column prop="type" label="演出类型" width="150"></el-table-column>
       <el-table-column prop="hall.name" label="演出场馆" width="300"></el-table-column>
       <el-table-column prop="price" label="演出票价" width="120"></el-table-column>
       <el-table-column prop="startTime" label="开始时间" width="180"></el-table-column>
-      <el-table-column prop="endTime" label="预计结束时间" width="180"></el-table-column>
 <!--      操作按钮-->
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
@@ -71,6 +70,16 @@
         </el-form-item>
         <el-form-item label="演出票价" prop="price">
           <el-input v-model="addForm.price"></el-input>
+        </el-form-item>
+        <el-form-item label="演出类型" prop="hall">
+          <el-select v-model="addForm.type" placeholder="请选择演出类型">
+            <el-option
+              v-for="item in showTypeList"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="演出场馆" prop="hall">
           <el-select v-model="addHallId" placeholder="请选择演出场馆">
@@ -178,7 +187,7 @@
 <script>
 import { getShowList, createShow, updateShow, deleteShow } from '@/api/shows'
 import { getHallList } from '@/api/hall'
-import { uploadPic, deletePic } from '@/plugins/cos.js'
+import { uploadPic, deletePic } from '@/plugins/cos'
 
 export default {
   name: "ShowInfo",
@@ -191,27 +200,21 @@ export default {
       total: 0,
       //控制对话框的显示与隐藏
       addDialogVisible: false,
-      selectedShowCategory:[],
       selectedShowHall: '',
-      selectedDate: [],
       inputShowName: '',
-      categoryList:[],
       hallList: [],
       showList: [],
+      // 演出类型列表
+      showTypeList: [{ name: '演唱会' }, { name: '音乐会' }, { name: '舞台剧' }, { name: 'LiveHouse' }],
+      rankList: [{ name: '近期热门' }, { name: '演唱会热门' }, { name: '音乐会热门' }, { name: '舞台剧热门' }, { name: 'LiveHouse热门' }],
       editForm: {
         hall: {
           id: ''
         }
       },
-      checkAbleId: {},
-      editCategoryForm:[],
       showId:'',
       editDialogVisible: false,
-      editCategoryVisible: false,
       multipleSelection: [],
-      dialogVisible: false,
-      dialogImageUrl: '',
-      disabled:false,
       addHallId: '',
       //添加演出表单数据
       addForm: {},
@@ -258,6 +261,7 @@ export default {
       const { data: hall } = await getHallList(hallSearch)
       this.showList = show
       this.hallList = hall
+      console.log(this.showList)
     },
     // 监听添加对话框的关闭事件
     addDialogClosed() {
@@ -281,10 +285,6 @@ export default {
     // 监听修改对话框的关闭事件
     editDialogClosed() {
       this.$refs.editFormRef.resetFields()
-    },
-    //监听修改类别对话框的关闭事件
-    editCategoryDialogClosed(){
-      this.selectedShowCategory = ''
     },
     // 修改演出信息对话框
     async editShowInfo() {

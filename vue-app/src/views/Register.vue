@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login-form">
       <div class="login-form-header">
-        <img style="width: 75px; height: 75px;float: left;padding-right: 40px;" src="../assets/img/logo.png"
+        <img style="width: 75px; height: 75px;float: left;padding-right: 40px;" src="../assets/img/logo2.png"
              alt=""/>
         <div class="login-form-text">得票 - 注册</div>
       </div>

@@ -16,13 +16,15 @@ async (req: Request, res: Response) => {
   const hall = await Hall.findById(req.body.hallId)
   if(!hall) throw new NotFoundError()
 
-  const { title, intro, price, cover, startTime, endTime } = req.body
-  show.set({ title, intro, price, cover, startTime, endTime, hall })
+  const { title, intro, type, rank, price, cover, startTime, endTime } = req.body
+  show.set({ title, intro, type, rank, price, cover, startTime, endTime, hall })
 
   await show.save()
   await new ShowUpdatedPublisher(natsWrapper.client).publish({
     id: show._id,
     title: show.title,
+    type: show.type,
+    rank: show.rank,
     intro: show.intro,
     price: show.price,
     cover: show.cover,
