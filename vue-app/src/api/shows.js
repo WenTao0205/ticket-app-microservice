@@ -1,10 +1,10 @@
 import axios from '../utils/request'
 
-export function getShowList() {
+export function getShowList(data) {
   return axios({
     url: '/show',
     method: 'post',
-    data: {}
+    data
   })
 }
 

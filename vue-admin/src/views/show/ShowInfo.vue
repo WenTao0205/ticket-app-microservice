@@ -19,7 +19,17 @@
                 v-for="item in hallList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id">
+                :value="item.name">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-select class="el-select-search" v-model="selectedShowType" placeholder="请选择演出类型" clearable>
+            <el-option
+                v-for="item in showTypeList"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name">
             </el-option>
           </el-select>
         </el-col>
@@ -111,6 +121,7 @@
           <el-upload
             action="#"
             list-type="picture-card"
+            ref="uploadCover"
             :limit="1"
             :show-file-list="true"
             :http-request="handleUpload"
@@ -201,6 +212,7 @@ export default {
       //控制对话框的显示与隐藏
       addDialogVisible: false,
       selectedShowHall: '',
+      selectedShowType: '',
       inputShowName: '',
       hallList: [],
       showList: [],
@@ -253,18 +265,18 @@ export default {
   methods: {
     async setShowList() {
       const showSearch = {}
-      const hallSearch = {}
       if(this.inputShowName) showSearch.title = this.inputShowName
-      if(this.selectedShowHall) hallSearch.name = this.selectedShowHall
+      if(this.selectedShowType) showSearch.type = this.selectedShowType
 
       const { data: show } = await getShowList(showSearch)
-      const { data: hall } = await getHallList(hallSearch)
-      this.showList = show
+      const { data: hall } = await getHallList({})
       this.hallList = hall
-      console.log(this.showList)
+      if(this.selectedShowHall) this.showList = show.filter(item => this.selectedShowHall === item.hall.name)
+      else this.showList = show
     },
     // 监听添加对话框的关闭事件
     addDialogClosed() {
+      this.$refs.uploadCover.clearFiles()
       this.$refs.addFormRef.resetFields()
     },
     // 监听添加按钮

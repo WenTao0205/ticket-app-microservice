@@ -29,6 +29,26 @@ const routes = [
         component: () => import("@/views/Home")
       },
       {
+        path: '/concertShow',
+        name: 'ConcertShow',
+        component: () => import("@/views/showType/concertShow")
+      },
+      {
+        path: '/instrumentShow',
+        name: 'InstrumentShow',
+        component: () => import("@/views/showType/instrumentShow")
+      },
+      {
+        path: '/theatrialShow',
+        name: 'TheatrialShow',
+        component: () => import("@/views/showType/theatrialShow")
+      },
+      {
+        path: '/liveHouseShow',
+        name: 'LiveHouseShow',
+        component: () => import("@/views/showType/livehouseShow")
+      },
+      {
         path: '/show',
         name: 'Show',
         component: () => import("@/views/show/Index"),

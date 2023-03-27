@@ -9,6 +9,8 @@ import { detailOrderRouter } from './route/detail'
 import { indexOrderRouter } from './route'
 import { deleteOrderRouter } from './route/delete'
 import { completeOrderRouter } from './route/complete'
+import { indexOrderAdminRouter } from './route/indexAdmin'
+import { deleteOrderAdminRouter } from './route/deleteAdmin'
 
 // error
 import { errorHandler, NotFoundError, currentUser } from '@zwt-tickets/common'
@@ -31,6 +33,8 @@ app.use(detailOrderRouter)
 app.use(newOrderRouter)
 app.use(deleteOrderRouter)
 app.use(completeOrderRouter)
+app.use(indexOrderAdminRouter)
+app.use(deleteOrderAdminRouter)
 
 app.all('*', async (req, res) => {
   throw new NotFoundError()

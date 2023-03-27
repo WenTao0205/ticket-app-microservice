@@ -1,30 +1,47 @@
 <template>
   <div class="app">
 
-    <div class="main">
-      <el-carousel type="card" :interval="6000" loop>
-        <el-carousel-item v-for="item in posterList" :key="item.url">
-          <img :src="item.url" alt/>
-        </el-carousel-item>
-      </el-carousel>
+    <el-carousel :interval="6000" type="card" height="400px" loop>
+      <el-carousel-item v-for="item in posterList" :key="item.url">
+        <img :src="item.url" alt="">
+      </el-carousel-item>
+    </el-carousel>
 
-      <div class="showList">
-        <div class="showItem" v-for="item in showList" :key="item.id" @click="toShowDetail(item.id)">
-          <div class="showItemCover">
-            <img :src="item.cover" style="object-fit: cover;" />
+    <div class="main">
+      <div class="showSection">
+        <div class="section-header">
+          <div class="section-name">演唱会热门</div>
+          <div class="section-operation"><a href="/#/concertShow" style="color: #ff4655;text-decoration: none;">查看更多</a></div>
+        </div>
+
+        <div class="section-shows">
+          <div class="section-show" v-for="item in concertShowList" :key="item.id" @click="toShowDetail(item.id)">
+            <div class="image-holder">
+              <img :src="item.cover" :data-src="item.cover" :alt="item.title">
+            </div>
+            <div class="show-detail">{{ item.title }}</div>
+            <div class="show-price">{{ item.price }}元</div>
           </div>
-          <div class="city">{{ item.hall.city }}</div>
-          <div class="showItemTitle">
-            <p class="title">{{ item.title }}</p>
-          </div>
-          <div class="showItemInfo">
-            <span class="showDate">{{ item.startTime }}</span>
-            <span class="showPrice">￥{{ item.price }}</span>
+        </div>
+      </div>
+
+      <div class="showSection">
+        <div class="section-header">
+          <div class="section-name">音乐会热门</div>
+          <div class="section-operation"><a href="/#/instrumentShow" style="color: #ff4655;text-decoration: none;">查看更多</a></div>
+        </div>
+
+        <div class="section-shows">
+          <div class="section-show" v-for="item in instrumentShowList" :key="item.id" @click="toShowDetail(item.id)">
+            <div class="image-holder">
+              <img :src="item.cover" :data-src="item.cover" :alt="item.title">
+            </div>
+            <div class="show-detail">{{ item.title }}</div>
+            <div class="show-price">{{ item.price }}元</div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -35,7 +52,8 @@ export default {
   name: 'home',
   data() {
     return {
-      showList: [],
+      concertShowList: [],
+      instrumentShowList: [],
       posterList: [
         {url: 'https://img0.tking.cn/mtl/default/img/HEy43fam6j_.png'},
         {url: 'https://img0.tking.cn/mtl/default/img/xyTmMSH6tG_.png'},
@@ -45,13 +63,17 @@ export default {
     }
   },
   created() {
-    this.getShowList()
+    this.getConcertShowList()
+    this.getInstrumentShowList()
   },
   methods: {
-    async getShowList() {
-      const res = await getShowList()
-      this.showList = res.data
-      console.log(this.showList)
+    async getConcertShowList() {
+      const res = await getShowList({ rank: '演唱会热门' })
+      this.concertShowList = res.data
+    },
+    async getInstrumentShowList() {
+      const res = await getShowList({ rank: '音乐会热门' })
+      this.instrumentShowList = res.data
     },
     async toShowDetail(id) {
       this.$router.push({ name: 'Show', query: { id } })
@@ -61,63 +83,80 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.main {
-  padding: 50px 300px;
-  .showList {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    justify-items: center;
-    margin-top: 50px;
-    .showItem {
-      position: relative;
-      margin: 0 18px 18px 0;
-      border: 1px solid #ebebeb;
-      border-radius: 5px;
-      width: 280px;
-      height: 500px;
-      cursor: pointer;
-      .showItemCover {
-        img {
-          border-radius: 5px 5px 0 0;
-        }
-      }
-      .city {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        background: linear-gradient(-45deg,#262626,#464441);
-        opacity: .8;
-        border-radius: 2px;
-        font-size: 16px;
-        color: #fff;
-        padding: 2px 8px;
-      }
-      .showItemTitle {
-        margin-top: 26px;
-        .title {
-          font-size: 18px;
-          color: #181818;
-          padding: 0 10px;
-        }
-      }
-      .showItemInfo {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        .showDate {
-          font-size: 18px;
-          color: #666;
-          padding-left: 10px;
-        }
-        .showPrice {
-          font-size: 22px;
-          color: #e93a00;
-          padding-right: 10px;
-        }
-      }
+::v-deep .el-carousel {
+  padding: 50px 0;
+  width: 90%;
+  margin: 0 auto;
+}
 
-      &:hover {
-        box-shadow: 6px 6px 6px #dfdfdf;
+.main {
+  margin: 0 20%;
+  .showSection {
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 90px;
+    .section-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      .section-name {
+        font-size: 30px;
+        height: 40px;
+        line-height: 40px;
+        vertical-align: bottom;
+      }
+      .section-operation {
+        position: absolute;
+        right: 0;
+        font-size: 20px;
+        color: #ff4655;
+        line-height: 40px;
+        vertical-align: baseline;
+        cursor: pointer;
+      }
+    }
+
+    .section-shows {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: 100%;
+      .section-show {
+        width: 150px;
+        font-size: 14px;
+        margin-top: 30px;
+        height: 300px;
+        text-align: left;
+        cursor: pointer;
+        .image-holder {
+          position: relative;
+          border-radius: 5px;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 210px;
+          }
+        }
+        .show-detail {
+          padding-top: 15px;
+          font-weight: 500;
+          padding-bottom: 5px;
+          font-size: 14px;
+          line-height: 22px;
+          height: 40px;
+          color: #323038;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .show-price {
+          color: #ff4655;
+          padding-top: 5px;
+          font-size: 20px;
+          font-weight: 700;
+        }
       }
     }
   }

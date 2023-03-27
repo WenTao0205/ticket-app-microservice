@@ -7,11 +7,15 @@
       </div>
       <div class="header-links">
         <el-link href="/" class="header-link" :underline="false">首页</el-link>
+        <el-link href="/#/concertShow" class="header-link" :underline="false">演唱会</el-link>
+        <el-link href="/#/instrumentShow" class="header-link" :underline="false">音乐会</el-link>
+        <el-link href="/#/theatrialShow" class="header-link" :underline="false">舞台剧</el-link>
+        <el-link href="/#/livehouseShow" class="header-link" :underline="false">LiveHouse</el-link>
       </div>
 
       <el-link @click="toLogin" v-if="!currentUser"
                class="header-link"
-               style="position: absolute;right: 400px"
+               style="position: absolute;right: 20%"
                :underline="false">
         登录
       </el-link>
@@ -96,7 +100,7 @@ export default {
 
 .header-logo {
   display: flex;
-  padding-left: 400px;
+  padding-left: 15%;
   align-items: center;
   letter-spacing: 2px;
 }
@@ -113,7 +117,7 @@ export default {
 }
 
 .header-link {
-  padding-left: 70px;
+  padding-left: 50px;
   letter-spacing: 2px;
   font-size: 17px;
 }
@@ -132,7 +136,7 @@ export default {
 
 .dropdown {
   position: absolute;
-  right: 400px;
+  right: 15%;
 }
 
 ::v-deep .el-button span {
