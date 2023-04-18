@@ -3,6 +3,7 @@ node_modules
 /dist
 /vue-admin-better
 /vue-admin-master
+/client
 
 # local env files
 .env.local
