@@ -92,13 +92,6 @@ import { getAllUser, alterUserInfo, deleteUser } from '@/api/users'
 
 export default {
   data() {
-    let checkEmail = (rule, value, cb) => {
-      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
-      if (regEmail.test(value)){
-        return cb()
-      }
-      cb(new Error('请输入合法的邮箱'))
-    }
     return {
       editDialogVisible: false,
       editForm: {},
@@ -107,8 +100,7 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入电子邮箱', trigger: 'blur' },
-          { validator: checkEmail, trigger: 'blur'}
+          { required: true, message: '请输入电子邮箱', trigger: 'blur' }
         ],
         birthDate: [
           { trigger: 'change' }

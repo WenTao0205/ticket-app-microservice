@@ -38,6 +38,11 @@
               <i style="font-size: 15px; padding-right: 3px" class="el-icon-user-solid"></i>个人设置
             </el-link>
           </el-dropdown-item>
+          <el-dropdown-item>
+            <el-link :underline="false" @click="toDeposit" style="padding-right: 7px">
+              <i style="font-size: 15px; padding-right: 3px" class="el-icon-wallet"></i>余额充值
+            </el-link>
+          </el-dropdown-item>
           <el-dropdown-item divided>
             <el-button type="text" @click="logout" :underline="false">
               <i style="font-size: 15px; padding-right: 3px" class="el-icon-switch-button"></i>退出登录
@@ -66,6 +71,7 @@ export default {
   methods: {
     async setCurrentUser() {
       this.currentUser = await getCurrentUser()
+      console.log(this.currentUser)
     },
     async logout() {
       await signOut()
@@ -80,6 +86,9 @@ export default {
     toMySetting() {
       this.$router.push({ name: 'Setting' })
     },
+    toDeposit() {
+      this.$router.push({ name: 'Deposit' })
+    }
   }
 }
 </script>

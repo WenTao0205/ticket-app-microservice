@@ -88,7 +88,9 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { cancelOrder, completeOrder, getOrderDetail } from '@/api/orders'
+import { getCurrentUser, buy } from '@/api/users'
 
 export default {
   name: 'Pay',
@@ -118,10 +120,16 @@ export default {
       this.show = this.order.show
     },
     async payForOrder(id) {
-      const { data } = await completeOrder(id)
-      this.order = data
-      this.show = this.order.show
-      console.log(this.order)
+      const { id: userid, balance } = await getCurrentUser()
+
+      if(balance >= this.order.price) {
+        await buy({ id: userid, amount: this.order.price })
+        const { data } = await completeOrder(id)
+        this.order = data
+        this.show = this.order.show
+        console.log(this.order)
+        Message.success('支付成功，订单已完成')
+      } else Message.error('余额不足请充值')
     },
     setTimer() {
       if(this.order.status === 'created') {

@@ -38,3 +38,19 @@ export function signOut() {
     method: 'post'
   })
 }
+
+export function deposit(data) {
+  return axios({
+    url: '/users/deposit',
+    method: 'put',
+    data
+  })
+}
+
+export function buy(data) {
+  return axios({
+    url: '/users/buy',
+    method: 'put',
+    data
+  })
+}

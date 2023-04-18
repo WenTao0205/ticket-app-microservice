@@ -109,7 +109,6 @@ export default {
       this.originOrderList = order
       this.showList = show
       this.hallList = hall
-      console.log(this.orderList, this.showList, this.hallList)
     },
 
     changeUsername() {
@@ -166,7 +165,7 @@ export default {
 
     seatFormatter(row, col, value) {
       let seatValue = ''
-      value.forEach(item => seatValue += `${item}号`)
+      value.forEach(item => seatValue += `${item}号 `)
       return seatValue
     },
     priceFormatter(row, col, value) {

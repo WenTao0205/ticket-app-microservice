@@ -88,6 +88,11 @@ const routes = [
             name: 'Setting',
             component: () => import("@/views/me/Setting")
           },
+          {
+            path: 'deposit',
+            name: 'Deposit',
+            component: () => import("@/views/me/Deposit")
+          }
         ]
       },
     ]

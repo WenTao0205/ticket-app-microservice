@@ -9,6 +9,7 @@ interface UserAttrs {
   email: string
   username: string
   password: string
+  balance?: number
   sex?: string
   birthDate?: string
   personalIntro?: string
@@ -26,6 +27,7 @@ interface UserDoc extends Document {
   email: string
   username: string
   password: string
+  balance?: number
   sex?: string
   birthDate?: string
   personalIntro?: string
@@ -48,6 +50,10 @@ const userSchema = new Schema(
   password: {
     type: String,
     required: true
+  },
+  balance: {
+    type: Number,
+    default: 0
   },
   sex: {
     type: String,

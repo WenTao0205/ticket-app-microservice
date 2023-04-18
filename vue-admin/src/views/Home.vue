@@ -65,7 +65,7 @@ export default {
       //左侧菜单数据
       menuList: [
         { id: 1, name: '用户管理', url: 'User' },
-        { id: 2, name: '演播厅管理', url: 'Hall' },
+        { id: 2, name: '演出场地管理', url: 'Hall' },
         { id: 3, name: '演出管理', url: 'Show', subMenuTitle: '热门演出管理', subMenu: [
           { id: '3-1', name: '演唱会热门', url: 'concertShow' },
           { id: '3-2', name: '音乐会热门', url: 'instrumentShow' },

@@ -14,8 +14,8 @@ export class ShowUpdatedListener extends Listener {
 
     if(!show) throw new Error('Show not found')
 
-    const { title, price, intro, cover, startTime, endTime, hall } = data
-    show.set({ title, price, intro, cover, startTime, endTime, hall })
+    const { title, price, intro, cover, startTime, endTime, selectedSeat, hall } = data
+    show.set({ title, price, intro, cover, startTime, endTime, selectedSeat, hall })
     await show.save()
 
     msg.ack()

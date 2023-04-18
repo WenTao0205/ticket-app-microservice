@@ -12,6 +12,8 @@ import { getAllUsers } from './route/getuser'
 import { alterUserInfo } from './route/alteruserinfo'
 import { deleteUser } from './route/deleteuser'
 import { getUserNameById } from './route/getusernamebyid'
+import { deposit } from './route/deposit'
+import { buy } from './route/buy'
 
 // error
 import { errorHandler, NotFoundError } from '@zwt-tickets/common'
@@ -37,6 +39,8 @@ app.use(getAllUsers)
 app.use(alterUserInfo)
 app.use(deleteUser)
 app.use(getUserNameById)
+app.use(deposit)
+app.use(buy)
 
 app.all('*', async (req, res) => {
   throw new NotFoundError()

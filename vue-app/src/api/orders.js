@@ -9,7 +9,7 @@ export function getOrderList() {
 
 export function getOrderDetail(orderId) {
   return axios({
-    url: `/orders/${orderId}`,
+    url: `/orders/detail/${orderId}`,
     method: 'get'
   })
 }

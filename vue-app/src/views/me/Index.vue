@@ -18,6 +18,12 @@
               <span style="letter-spacing: 1px" slot="title">基本设置</span>
             </el-menu-item>
           </router-link>
+          <router-link to="/me/deposit">
+            <el-menu-item index="3">
+              <i class="el-icon-wallet"></i>
+              <span style="letter-spacing: 1px" slot="title">余额充值</span>
+            </el-menu-item>
+          </router-link>
         </el-menu>
       </div>
 

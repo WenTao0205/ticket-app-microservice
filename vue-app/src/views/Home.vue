@@ -41,6 +41,40 @@
           </div>
         </div>
       </div>
+
+      <div class="showSection">
+        <div class="section-header">
+          <div class="section-name">舞台剧热门</div>
+          <div class="section-operation"><a href="/#/theatrialShow" style="color: #ff4655;text-decoration: none;">查看更多</a></div>
+        </div>
+
+        <div class="section-shows">
+          <div class="section-show" v-for="item in theatrialShowList" :key="item.id" @click="toShowDetail(item.id)">
+            <div class="image-holder">
+              <img :src="item.cover" :data-src="item.cover" :alt="item.title">
+            </div>
+            <div class="show-detail">{{ item.title }}</div>
+            <div class="show-price">{{ item.price }}元</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showSection">
+        <div class="section-header">
+          <div class="section-name">音乐会热门</div>
+          <div class="section-operation"><a href="/#/livehouseShow" style="color: #ff4655;text-decoration: none;">查看更多</a></div>
+        </div>
+
+        <div class="section-shows">
+          <div class="section-show" v-for="item in livehouseShowList" :key="item.id" @click="toShowDetail(item.id)">
+            <div class="image-holder">
+              <img :src="item.cover" :data-src="item.cover" :alt="item.title">
+            </div>
+            <div class="show-detail">{{ item.title }}</div>
+            <div class="show-price">{{ item.price }}元</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -54,6 +88,8 @@ export default {
     return {
       concertShowList: [],
       instrumentShowList: [],
+      theatrialShowList: [],
+      livehouseShowList: [],
       posterList: [
         {url: 'https://img0.tking.cn/mtl/default/img/HEy43fam6j_.png'},
         {url: 'https://img0.tking.cn/mtl/default/img/xyTmMSH6tG_.png'},
@@ -65,6 +101,8 @@ export default {
   created() {
     this.getConcertShowList()
     this.getInstrumentShowList()
+    this.getTheatrialShowList()
+    this.getLiveHouseShowList()
   },
   methods: {
     async getConcertShowList() {
@@ -74,6 +112,14 @@ export default {
     async getInstrumentShowList() {
       const res = await getShowList({ rank: '音乐会热门' })
       this.instrumentShowList = res.data
+    },
+    async getTheatrialShowList() {
+      const res = await getShowList({ rank: '舞台剧热门' })
+      this.theatrialShowList = res.data
+    },
+    async getLiveHouseShowList() {
+      const res = await getShowList({ rank: 'LiveHouse热门' })
+      this.livehouseShowList = res.data
     },
     async toShowDetail(id) {
       this.$router.push({ name: 'Show', query: { id } })
