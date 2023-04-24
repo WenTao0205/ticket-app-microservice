@@ -52,9 +52,6 @@ async (req: Request, res: Response) => {
   })
   await order.save()
 
-  console.log(order.expiresAt.toISOString())
-  console.log(new Date(order.expiresAt.toISOString()).getTime())
-
   // 发布事件: 创建订单
   new OrderCreatedPublisher(natsWrapper.client).publish({
     id: order.id,

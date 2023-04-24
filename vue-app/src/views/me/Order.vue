@@ -4,7 +4,7 @@
     <div>
       <el-card v-for="(item) in orderList" :key="item.id" class="box-card">
         <div>
-          <img class="item-film-img" alt="" :src="require('../../assets/img/film.png')"/>
+          <img class="item-film-img" alt="" :src="item.show.cover"/>
           <div style="float: left;">
             <div class="item-film-name">《{{ item.show.title }}》</div>
             <div class="item-film-seat">订购座位 : {{ item.seat }}</div>

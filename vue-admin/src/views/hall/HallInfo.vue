@@ -58,11 +58,18 @@
         <el-form-item label="场馆名称" prop="name">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="城市" prop="city">
-          <el-input v-model="addForm.city"></el-input>
-        </el-form-item>
         <el-form-item label="场馆地址" prop="address">
           <el-input v-model="addForm.address"></el-input>
+        </el-form-item>
+        <el-form-item label="城市" prop="city">
+          <el-select v-model="addForm.city" placeholder="请选择演出城市">
+            <el-option
+              v-for="item in citys"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="总座位数" prop="seatsNumber">
           <el-input-number v-model="addForm.seatsNumber" controls-position="right" :min="1" :max="500"></el-input-number>
@@ -86,7 +93,14 @@
           <el-input v-model="editForm.name"></el-input>
         </el-form-item>
         <el-form-item label="城市" prop="city">
-          <el-input v-model="editForm.city"></el-input>
+          <el-select v-model="editForm.city" placeholder="请选择演出城市">
+            <el-option
+              v-for="item in citys"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="场馆地址" prop="address">
           <el-input v-model="editForm.address"></el-input>
@@ -129,6 +143,7 @@ export default {
         address: '',
         seatsNumber: 0
       },
+      citys: ["深圳", "香港", "珠海", "湛江", "海口"],
       //验证表单规则对象
       addFormRules: {
         name: [

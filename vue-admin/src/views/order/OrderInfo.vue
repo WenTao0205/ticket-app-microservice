@@ -18,11 +18,6 @@
           <el-button icon="el-icon-search" @click="changeUsername">搜索</el-button>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="selectedHall" @change="changeHall" @clear="clearQuery" placeholder="请选择演出剧院" clearable>
-            <el-option v-for="item in hallList" :key="item.id" :label="item.name" :value="item.name"></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="4">
           <el-select v-model="selectedShow" @change="changeShow" @clear="clearQuery" placeholder="请选择演出" clearable>
             <el-option v-for="item in showList" :key="item.id" :label="item.title" :value="item.title"></el-option>
           </el-select>
@@ -39,7 +34,6 @@
         <el-table-column prop="id" label="#" width="220"></el-table-column>
         <el-table-column prop="username" label="用户名" width="120"></el-table-column>
         <el-table-column prop="show.title" label="演出标题"></el-table-column>
-        <el-table-column prop="show.hall.name" label="演出剧院"></el-table-column>
         <el-table-column prop="seat" label="座位号" width="150" :formatter="seatFormatter"></el-table-column>
         <el-table-column prop="price" label="价格" width="80" :formatter="priceFormatter"></el-table-column>
         <el-table-column prop="status" label="支付状态" width="100" :formatter="statusFormatter"></el-table-column>
@@ -95,8 +89,8 @@ export default {
       ]
     }
   },
-  created() {
-    this.setOrderList()
+  async created() {
+    await this.setOrderList()
   },
   methods: {
     async setOrderList() {
@@ -109,6 +103,7 @@ export default {
       this.originOrderList = order
       this.showList = show
       this.hallList = hall
+      console.log(this.orderList)
     },
 
     changeUsername() {

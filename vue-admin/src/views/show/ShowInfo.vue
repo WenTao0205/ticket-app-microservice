@@ -58,7 +58,7 @@
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="查看演出信息详细" placement="top" :enterable="false" :open-delay="500">
-            <el-button type="success" icon="el-icon-view" size="mini" @click="toShowInfo(scope.row.showId)"></el-button>
+            <el-button type="success" icon="el-icon-view" size="mini" @click="toShowInfo(scope.row.id)"></el-button>
           </el-tooltip>
           <el-tooltip effect="dark" content="修改演出信息" placement="top" :enterable="false" :open-delay="500">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)"></el-button>
@@ -325,7 +325,7 @@ export default {
       })
     },
     toShowInfo(id) {
-      window.open('http://localhost:8081/showInfo/' + id)
+      window.open(`http://localhost:8091/#/show?id=${id}`)
     },
     // 显示修改对话框，回显数据
     async showEditDialog(data) {

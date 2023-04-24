@@ -61,7 +61,7 @@
 
       <div class="showSection">
         <div class="section-header">
-          <div class="section-name">音乐会热门</div>
+          <div class="section-name">LiveHouse热门</div>
           <div class="section-operation"><a href="/#/livehouseShow" style="color: #ff4655;text-decoration: none;">查看更多</a></div>
         </div>
 

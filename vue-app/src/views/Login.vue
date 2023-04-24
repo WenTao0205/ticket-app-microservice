@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="login-form">
-      <div class="login-form-header">
+      <div class="login-form-header" @click="toHome">
         <img
           style="width: 75px; height: 75px; float: left; padding-right: 40px"
           src="../assets/img/logo2.png"
@@ -65,6 +65,9 @@ export default {
     },
     toRegister() {
       this.$router.push({ name: 'Register' })
+    },
+    toHome() {
+      this.$router.push({ name: 'Home' })
     }
   }
 };
@@ -90,6 +93,7 @@ export default {
   height: 20px;
   padding-left: 90px;
   padding-bottom: 100px;
+  cursor: pointer;
 }
 
 .login-form-text {
